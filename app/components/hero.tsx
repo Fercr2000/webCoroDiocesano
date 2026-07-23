@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronDown } from 'lucide-react';
 
 const slides = [
   {
@@ -48,12 +49,18 @@ export default function Hero() {
             src={slide.image}
             alt={slide.title}
             fill
-            className="object-cover"
+            className="object-cover kenburns"
             priority={index === 0}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/80" />
+          {/* Grano cinematográfico sutil sobre la imagen */}
+          <div className="capa-grano" />
         </div>
       ))}
+
+      {/* Viñeta radial: oscurece sutilmente el centro para que el titular
+          aguante la legibilidad sobre cualquier slide. */}
+      <div className="absolute inset-0 z-[1] pointer-events-none bg-[radial-gradient(ellipse_55%_50%_at_50%_42%,rgba(0,0,0,0.45),transparent_72%)]" />
 
       {/* Texto y botones */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
@@ -110,6 +117,19 @@ export default function Hero() {
             }`}
           />
         ))}
+      </div>
+
+      {/* Indicador de scroll: chevron que invita a bajar (centrado + rebote).
+          El centrado va en el contenedor y el rebote en el hijo para no
+          pisar el transform. */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20">
+        <a
+          href="#quienes-somos"
+          aria-label="Ir al contenido"
+          className="chevron-cue block text-stone-50/80 hover:text-stone-50 transition-colors"
+        >
+          <ChevronDown size={26} strokeWidth={1.5} />
+        </a>
       </div>
 
       {/* Línea inferior decorativa */}

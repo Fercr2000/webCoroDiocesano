@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8f6f3;
+  --foreground: #1c1917;
+  /* Evita que el SO invierta la paleta cálida en modo oscuro del sistema. */
+  color-scheme: light;
 }
 
 @theme inline {
@@ -12,17 +14,149 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  /* Suavizado tipográfico: acabado más limpio en titulares serif. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   TEXTURA EDITORIAL
+   Sistema de fondos "de papel": superficies crema construidas en
+   capas (halos granate/ámbar muy tenues + degradado vertical) sobre
+   las que se posa un grano fino. Sustituye a los fondos planos
+   (bg-stone-50 / bg-stone-100) para dar profundidad sin perder la
+   identidad artesanal ni introducir modo oscuro.
+
+   Uso:
+   - .superficie-crema        → secciones claras (antes bg-stone-50)
+   - .superficie-crema-honda  → secciones un tono más cálido (antes bg-stone-100)
+   - .capa-grano              → <div> suelto para texturizar imágenes u oscuros
+   ============================================================ */
+
+.superficie-crema,
+.superficie-crema-honda,
+.superficie-clara {
+  position: relative;
+}
+
+/* Superficie "con efecto": halos de color CONTENIDOS en las esquinas
+   (radio pequeño y caída rápida), no lavan el centro de la sección. */
+/* Superficie "lisa": blanco limpio y neutro, solo con el grano de papel.
+   Es la base de TODO; las secciones alternas añaden encima el halo. */
+.superficie-clara {
+  background-color: #fcfcfb;
+}
+
+/* Superficie "con halo": mismo blanco limpio + un halo granate MUY tenue
+   que sangra desde la esquina superior izquierda. Solo luz de marca, sin
+   relleno de color: diferencia las secciones alternas sin amarillear. */
+.superficie-crema,
+.superficie-crema-honda {
+  background-color: #fcfcfb;
+  background-image:
+    radial-gradient(40rem 32rem at -2% -10%, rgba(153, 27, 27, 0.13), transparent 48%);
+}
+
+/* Grano de papel sobre las superficies claras.
+   multiply a baja opacidad: textura fina de papel sin ensuciar el tono. */
+.superficie-crema::before,
+.superficie-crema-honda::before,
+.superficie-clara::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='g'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* Capa de grano suelta para superponer sobre imágenes o fondos oscuros
+   (hero, columnas granate del login). overlay da textura cinematográfica
+   sin apagar el color. Colócala como <div className="capa-grano" />. */
+.capa-grano {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.13;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='150'%20height='150'%3E%3Cfilter%20id='g'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+}
+
+/* ===================== MOVIMIENTO Y FOCO ===================== */
+
+/* Foco visible de marca para navegación teclado (enlaces y botones).
+   Los inputs ya tienen su propio anillo, así que no se ven afectados. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(153, 27, 27, 0.75);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Ken Burns: zoom/paneo muy lento del fondo del hero (vida cinematográfica). */
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+
+.kenburns {
+  animation: kenburns 22s ease-in-out infinite alternate;
+  transform-origin: center 40%;
+  will-change: transform;
+}
+
+/* Foco de luz que "respira": pulso lento de opacidad y escala. */
+@keyframes respira {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+.respira {
+  animation: respira 9s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+/* Pentagrama ondulado del área de miembros: fluye en bucle continuo.
+   Desplaza -50% del propio ancho (una mitad = la otra) para un bucle sin costura. */
+@keyframes olaMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.pentagrama-ola {
+  animation: olaMove 16s linear infinite;
+  will-change: transform;
+}
+
+/* Indicador de scroll del hero: chevron con rebote suave. */
+@keyframes chevronCue {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(7px); opacity: 1; }
+}
+
+.chevron-cue {
+  animation: chevronCue 1.9s ease-in-out infinite;
+}
+
+/* Respeto a quien prefiere menos movimiento. */
+@media (prefers-reduced-motion: reduce) {
+  .kenburns,
+  .chevron-cue,
+  .pentagrama-ola,
+  .respira {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 /* Animación fadeIn usada en el Hero al cambiar de slide */

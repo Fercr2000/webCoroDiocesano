@@ -6,14 +6,10 @@ export default function Director() {
 
     <section
       id="director"
-      className="relative w-full bg-stone-100 py-32 md:py-40 overflow-hidden"
+      className="superficie-clara w-full py-32 md:py-40 overflow-hidden"
     >
 
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent" />
-
-      {/* Círculos decorativos de fondo */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-red-900/5 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-[32rem] h-[32rem] rounded-full bg-amber-900/5 blur-3xl pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
 
