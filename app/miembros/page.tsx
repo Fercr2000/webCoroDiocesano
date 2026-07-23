@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, ArrowRight, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import FondoGranateMiembros from '../components/FondoGranateMiembros';
 
 export default function LoginPage() {
 
@@ -13,10 +15,21 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // ── Atajo de DEMO (mockup) ──────────────────────────────────────────
+    // Con admin / admin en email y contraseña se abre el área de miembros,
+    // para poder enseñar la funcionalidad sin Supabase conectado.
+    // (Se eliminará cuando se conecte la autenticación real.)
+    if (email.trim().toLowerCase() === 'admin' && password === 'admin') {
+      router.push('/miembros/dashboard');
+      return;
+    }
 
     setTimeout(() => {
       setLoading(false);
@@ -30,23 +43,10 @@ export default function LoginPage() {
 
       {/* ============= COLUMNA IZQUIERDA: SOLO TEXTO Y ARTE =============
           Fondo granate sobrio, mismo que el botón "Acceder". */}
-      <div className="hidden md:flex relative overflow-hidden bg-gradient-to-br from-red-800 to-red-950">
+      <div className="hidden md:flex relative overflow-hidden bg-gradient-to-br from-red-800 via-red-900 to-red-950">
 
-        {/* Focos de luz concentrados */}
-        <div className="absolute top-[15%] left-[40%] w-72 h-72 rounded-full bg-red-600/40 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[10%] right-[5%] w-80 h-80 rounded-full bg-red-950/60 blur-3xl pointer-events-none" />
-
-        {/* Pentagrama sutil */}
-        <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
-          <div className="absolute top-[30%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[35%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[40%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[45%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[50%] left-0 right-0 h-px bg-stone-50" />
-        </div>
-
-        {/* Separador vertical derecho */}
-        <div className="absolute top-0 bottom-0 right-0 w-1 bg-gradient-to-b from-red-950 via-red-700 to-red-950 z-10" />
+        {/* Fondo decorativo compartido (grano, viñeta, focos, pauta, marco, separador) */}
+        <FondoGranateMiembros />
 
         {/* CONTENIDO */}
         <div className="relative z-10 w-full h-full p-12 lg:p-16 flex flex-col">
@@ -120,9 +120,9 @@ export default function LoginPage() {
       </div>
 
       {/* ============= COLUMNA DERECHA: FORMULARIO ============= */}
-      <div className="relative flex items-center justify-center bg-gradient-to-b from-stone-50 via-amber-50 to-stone-100 px-6 py-12 md:py-0 min-h-screen overflow-hidden">
+      <div className="superficie-crema flex items-center justify-center px-6 py-12 md:py-0 min-h-screen overflow-hidden">
 
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-100/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent pointer-events-none" />
 
         <div className="md:hidden absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-950 via-red-700 to-red-950" />
 
@@ -157,7 +157,7 @@ export default function LoginPage() {
             Accede al área de miembros
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
 
             <div>
               <label className="block mb-2">
@@ -261,9 +261,10 @@ export default function LoginPage() {
           <div className="mt-8 text-center">
             <Link
               href="/"
-              className="text-xs tracking-[0.2em] uppercase text-stone-500 hover:text-red-800 transition-colors"
+              className="group inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-stone-600 hover:text-red-800 border border-stone-300 hover:border-red-800 hover:bg-red-50/40 px-6 py-3 rounded-sm transition-all duration-300"
             >
-              ← Volver al inicio
+              <ArrowLeft size={14} strokeWidth={1.5} className="transition-transform group-hover:-translate-x-1" />
+              Volver al inicio
             </Link>
           </div>
 

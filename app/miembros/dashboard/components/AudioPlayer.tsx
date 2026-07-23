@@ -81,7 +81,7 @@ export default function AudioCard({ titulo, compositor, categoria, enlaceAudio }
 
   return (
 
-    <div className="group relative bg-gradient-to-b from-stone-50 to-stone-100 border border-stone-200 rounded-sm overflow-hidden hover:shadow-xl hover:shadow-red-900/10 hover:border-red-800/30 transition-all duration-300">
+    <div className="group relative bg-gradient-to-b from-white to-stone-100 border border-stone-200/80 rounded-sm overflow-hidden shadow-sm shadow-stone-900/5 hover:shadow-xl hover:shadow-red-900/10 hover:border-red-800/30 hover:-translate-y-0.5 transition-all duration-300">
 
       {/* Banda lateral izquierda */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-red-800 to-red-950 opacity-60 group-hover:opacity-100 transition-opacity duration-300" />

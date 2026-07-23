@@ -14,10 +14,13 @@ export default function Footer() {
     //   from-black         → negro puro arriba
     //   via-stone-900      → grafito en el centro
     //   to-stone-950       → casi negro abajo
-    <footer className="relative w-full bg-gradient-to-b from-black via-stone-900 to-stone-950 text-stone-100 overflow-hidden">
+    <footer className="relative w-full bg-gradient-to-b from-[#17120e] via-[#120d0a] to-[#080605] text-stone-100 overflow-hidden">
 
       {/* LÍNEA DECORATIVA SUPERIOR (igual que el header) */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-950 via-red-700 to-red-950" />
+
+      {/* Grano sutil que da textura al degradado oscuro */}
+      <div className="capa-grano" />
 
       {/* CUERPO DEL FOOTER (compacto, py-4) */}
       <div className="relative z-10 w-full px-6 lg:px-12 py-4">

@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { LogOut, KeyRound } from 'lucide-react';
 
 interface DashboardHeaderProps {
@@ -11,8 +13,20 @@ interface DashboardHeaderProps {
 
 export default function DashboardHeader({ nombre, rol }: DashboardHeaderProps) {
 
+  const router = useRouter();
+  const [scrolled, setScrolled] = useState(false);
+
+  // Condensación al hacer scroll (mismo efecto que el header del sitio público).
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Por ahora (mockup), cerrar sesión vuelve a la página de inicio.
   const handleLogout = () => {
-    alert('Cerrar sesión - se activará al conectar Supabase');
+    router.push('/');
   };
 
   return (
@@ -21,66 +35,55 @@ export default function DashboardHeader({ nombre, rol }: DashboardHeaderProps) {
       {/* Franja roja superior */}
       <div className="h-1 w-full bg-gradient-to-r from-red-950 via-red-700 to-red-950" />
 
-      <div className="relative w-full bg-gradient-to-b from-stone-50 via-amber-50 to-stone-100 backdrop-blur-md border-b border-red-900/20 shadow-sm">
+      <div className={`relative w-full bg-white/70 backdrop-blur-xl border-b border-red-900/15 transition-shadow duration-300 ${scrolled ? 'shadow-md shadow-red-950/10' : 'shadow-sm shadow-red-950/5'}`}>
 
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-100/40 to-transparent pointer-events-none" />
+        {/* Halo granate sutil (solo luz de marca, sin amarillo) que da calidez al cristal */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(32rem_12rem_at_18%_-30%,rgba(153,27,27,0.10),transparent_60%)]" />
 
-        <div className="relative w-full px-6 lg:px-12 py-5">
+        <div className={`relative w-full px-6 lg:px-12 transition-all duration-300 ${scrolled ? 'py-2.5' : 'py-5'}`}>
 
-          {/* ============= FILA PRINCIPAL =============
-              Posicionamiento absoluto del saludo para que esté CENTRADO RESPECTO
-              A LA PANTALLA, no respecto al espacio que dejan los botones.
-              Logo (izq) y botones (der) van con posición absoluta también, así
-              el saludo no se desplaza nunca según el ancho de los demás bloques. */}
-          <div className="relative flex items-center min-h-[80px]">
+          {/* ============= FILA PRINCIPAL (3 columnas balanceadas) =============
+              grid-cols-3 reparte el ancho en tres tercios iguales: logo a la
+              izquierda, saludo centrado en el tercio central y acciones a la
+              derecha. Así el saludo queda centrado de verdad y equilibrado,
+              sin depender del ancho de logo/botones. */}
+          <div className="flex items-center justify-between md:grid md:grid-cols-3 min-h-[72px]">
 
-            {/* IZQUIERDA: Logo (absoluto, anclado al borde) */}
-            <Link href="/miembros/dashboard" className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center group flex-shrink-0">
-              <div className="relative h-14 w-56 transition-transform duration-500 group-hover:scale-[1.02]">
-                <Image
-                  src="/LogoCoroDiocesano.png"
-                  alt="Coro de la Diócesis de Jaén"
-                  fill
-                  className="object-contain object-left"
-                  priority
-                />
-              </div>
-            </Link>
-
-            {/* CENTRO: Saludo con nombre + rol (centrado REAL respecto al viewport).
-                mx-auto + ancho fijo + posicionamiento garantiza centro perfecto. */}
-            <div className="hidden md:flex flex-col items-center mx-auto text-center">
-
-              {/* Saludo con la capitular del nombre en granate.
-                  text-2xl → mucho más grande que antes (era text-lg)
-                  La capital es text-5xl, doblada respecto al resto del texto. */}
-              <div className="font-serif text-2xl text-stone-700 leading-none flex items-baseline">
-                <span className="mr-2">Hola,</span>
-                <span className="text-stone-900 flex items-baseline">
-                  {/* Capitular gigante granate */}
-                  <span className="font-serif text-5xl text-red-800 font-medium leading-none">
-                    {nombre.charAt(0)}
-                  </span>
-                  {/* Resto del nombre, también más grande */}
-                  <span className="text-3xl font-medium">
-                    {nombre.slice(1)}
-                  </span>
-                </span>
-              </div>
-
-              {/* Rol en eyebrow con líneas decorativas - más grande también */}
-              <div className="flex items-center gap-4 mt-3">
-                <div className="h-px w-10 bg-red-800/50" />
-                <span className="text-xs tracking-[0.5em] uppercase text-red-800 font-semibold">
-                  {rol}
-                </span>
-                <div className="h-px w-10 bg-red-800/50" />
-              </div>
-
+            {/* IZQUIERDA: Logo */}
+            <div className="flex justify-start">
+              <Link href="/miembros/dashboard" className="flex items-center group flex-shrink-0 rounded-sm">
+                <div className={`relative transition-all duration-300 group-hover:scale-[1.02] ${scrolled ? 'h-11 w-44' : 'h-14 w-56'}`}>
+                  <Image
+                    src="/LogoCoroDiocesano.png"
+                    alt="Coro de la Diócesis de Jaén"
+                    fill
+                    className="object-contain object-left"
+                    priority
+                  />
+                </div>
+              </Link>
             </div>
 
-            {/* DERECHA: Botones (absolutos, anclados al borde derecho) */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
+            {/* CENTRO: Saludo con capitular granate armonizada + rol */}
+            <div className="hidden md:flex flex-col items-center">
+              <div className="font-serif text-stone-800 flex items-baseline gap-2 leading-none">
+                <span className="italic text-stone-500 text-lg">Hola,</span>
+                <span className="flex items-baseline font-medium">
+                  <span className="text-4xl text-red-800 leading-none">{nombre.charAt(0)}</span>
+                  <span className="text-2xl text-stone-900 leading-none">{nombre.slice(1)}</span>
+                </span>
+              </div>
+              <div className="flex items-center gap-3 mt-2.5">
+                <div className="h-px w-8 bg-red-800/50" />
+                <span className="text-[11px] tracking-[0.5em] uppercase text-red-800 font-semibold">
+                  {rol}
+                </span>
+                <div className="h-px w-8 bg-red-800/50" />
+              </div>
+            </div>
+
+            {/* DERECHA: Acciones */}
+            <div className="flex justify-end items-center gap-3">
 
               <Link
                 href="/miembros/cambiar-contrasena"

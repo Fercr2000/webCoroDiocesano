@@ -4,7 +4,7 @@ export default function About() {
 
     <section
       id="quienes-somos"
-      className="relative w-full bg-stone-50 py-32 md:py-40"
+      className="superficie-crema w-full py-32 md:py-40"
     >
 
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent" />

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, ArrowRight, CheckCircle } from 'lucide-react';
+import FondoGranateMiembros from '../../components/FondoGranateMiembros';
 
 export default function RecuperarPage() {
 
@@ -26,20 +27,10 @@ export default function RecuperarPage() {
     <div className="min-h-screen w-full md:grid md:grid-cols-2">
 
       {/* COLUMNA IZQUIERDA */}
-      <div className="hidden md:flex relative overflow-hidden bg-gradient-to-br from-red-800 to-red-950">
+      <div className="hidden md:flex relative overflow-hidden bg-gradient-to-br from-red-800 via-red-900 to-red-950">
 
-        <div className="absolute top-[15%] left-[40%] w-72 h-72 rounded-full bg-red-600/40 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[10%] right-[5%] w-80 h-80 rounded-full bg-red-950/60 blur-3xl pointer-events-none" />
-
-        <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
-          <div className="absolute top-[30%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[35%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[40%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[45%] left-0 right-0 h-px bg-stone-50" />
-          <div className="absolute top-[50%] left-0 right-0 h-px bg-stone-50" />
-        </div>
-
-        <div className="absolute top-0 bottom-0 right-0 w-1 bg-gradient-to-b from-red-950 via-red-700 to-red-950 z-10" />
+        {/* Fondo decorativo compartido (grano, viñeta, focos, pauta, marco, separador) */}
+        <FondoGranateMiembros />
 
         <div className="relative z-10 w-full h-full p-12 lg:p-16 flex flex-col">
 
@@ -102,9 +93,9 @@ export default function RecuperarPage() {
       </div>
 
       {/* COLUMNA DERECHA */}
-      <div className="relative flex items-center justify-center bg-gradient-to-b from-stone-50 via-amber-50 to-stone-100 px-6 py-12 md:py-0 min-h-screen overflow-hidden">
+      <div className="superficie-crema flex items-center justify-center px-6 py-12 md:py-0 min-h-screen overflow-hidden">
 
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-100/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent pointer-events-none" />
 
         <div className="md:hidden absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-950 via-red-700 to-red-950" />
 

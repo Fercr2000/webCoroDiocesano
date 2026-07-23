@@ -171,15 +171,19 @@ export default function DashboardPage() {
 
   return (
 
-    <div className="min-h-screen w-full bg-stone-50 flex flex-col">
+    <div className="min-h-screen w-full superficie-crema flex flex-col">
 
       <DashboardHeader nombre={usuarioPrueba.nombre} rol={usuarioPrueba.rol} />
 
       <main className="flex-1 relative overflow-hidden">
 
-        {/* Círculos decorativos de fondo */}
-        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-red-900/5 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 -left-40 w-[32rem] h-[32rem] rounded-full bg-amber-900/5 blur-3xl pointer-events-none" />
+        {/* Degradados laterales que visten los márgenes: contenidos (estrechos),
+            así el centro del contenido queda en blanco limpio. */}
+        <div className="absolute inset-y-0 left-0 w-[9%] max-w-[14rem] bg-gradient-to-r from-red-900/[0.10] to-transparent pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-[9%] max-w-[14rem] bg-gradient-to-l from-red-900/[0.10] to-transparent pointer-events-none" />
+
+        {/* Foco superior muy tenue (solo un roce de luz arriba; el centro queda blanco) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[56rem] max-w-full h-36 bg-[radial-gradient(70%_100%_at_50%_0%,rgba(153,27,27,0.05),transparent_75%)] pointer-events-none" />
 
         <div className="relative max-w-6xl mx-auto px-6 lg:px-12 py-16 md:py-20">
 
