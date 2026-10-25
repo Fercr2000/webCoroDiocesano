@@ -37,10 +37,14 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Cerrar el menú móvil al navegar a otra ruta.
-  useEffect(() => {
+  // Cerrar el menú móvil al navegar a otra ruta. Se compara con la ruta
+  // anterior durante el render (patrón recomendado por React) en vez de
+  // usar un efecto, que provocaría un render extra.
+  const [rutaPrevia, setRutaPrevia] = useState(pathname);
+  if (pathname !== rutaPrevia) {
+    setRutaPrevia(pathname);
     setMenuAbierto(false);
-  }, [pathname]);
+  }
 
   // Bloquear el scroll del fondo mientras el panel móvil está abierto.
   useEffect(() => {

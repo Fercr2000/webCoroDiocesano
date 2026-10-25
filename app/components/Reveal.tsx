@@ -20,11 +20,8 @@ export default function Reveal({ children, className = '', delay = 0 }: RevealPr
     const el = ref.current;
     if (!el) return;
 
-    // Si el usuario prefiere menos movimiento, mostramos sin animar.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setVisible(true);
-      return;
-    }
+    // Con menos movimiento lo resuelve el CSS (motion-reduce:), no hace falta observar.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -46,7 +43,7 @@ export default function Reveal({ children, className = '', delay = 0 }: RevealPr
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-[900ms] ease-out ${
+      className={`transition-all duration-[900ms] ease-out motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:translate-y-0 ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       } ${className}`}
     >
