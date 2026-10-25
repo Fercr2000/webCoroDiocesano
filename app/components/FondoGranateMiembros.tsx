@@ -18,8 +18,8 @@ export default function FondoGranateMiembros() {
       <div className="respira absolute top-[15%] left-[38%] w-72 h-72 rounded-full bg-red-500/30 blur-3xl pointer-events-none" />
       <div className="absolute bottom-[8%] right-[4%] w-80 h-80 rounded-full bg-red-950/60 blur-3xl pointer-events-none" />
 
-      {/* Pauta musical ondulada compacta en movimiento */}
-      <PentagramaOla />
+      {/* Pauta musical ondulada con notas, al mismo ritmo pausado que el cartel del calendario */}
+      <PentagramaOla conNotas duracion={48} />
 
       {/* Marco editorial: esquinas decorativas (arriba-izq / abajo-der) */}
       <div className="absolute top-8 left-8 w-8 h-8 border-t border-l border-stone-50/25 pointer-events-none" />

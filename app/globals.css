@@ -138,6 +138,20 @@ button:focus-visible {
   will-change: transform;
 }
 
+/* Notas que flotan muy despacio en el fondo de Componentes: suben un poco,
+   aparecen y se desvanecen. Cada nota lleva su duración y retraso. */
+@keyframes notaFlota {
+  0% { transform: translateY(24px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(-48px); opacity: 0; }
+}
+
+.nota-flota {
+  animation: notaFlota 20s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
 /* Indicador de scroll del hero: chevron con rebote suave. */
 @keyframes chevronCue {
   0%, 100% { transform: translateY(0); opacity: 0.7; }
@@ -153,6 +167,7 @@ button:focus-visible {
   .kenburns,
   .chevron-cue,
   .pentagrama-ola,
+  .nota-flota,
   .respira {
     animation: none !important;
     transform: none !important;

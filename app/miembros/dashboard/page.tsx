@@ -1,127 +1,43 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Search, X } from 'lucide-react';
 import DashboardHeader from './components/DashboardHeader';
 import FileCard from './components/FileCard';
 import AudioCard from './components/AudioPlayer';
+import AdminSection from './components/AdminSection';
+import BandaProximaCelebracion from '@/app/components/calendario/BandaProximaCelebracion';
+import { REPERTORIO_TODOS } from '@/lib/archivo';
+import { repertoriosPrueba, partiturasPrueba, audiosPrueba, eventosPrueba } from '@/lib/datosPrueba';
 
 // ============= DATOS DE PRUEBA =============
 
 const usuarioPrueba = {
   nombre: 'Fernando',
-  rol: 'Tenor',
+  rol: 'Director', // Cambia a 'Tenor', 'Soprano'... para ver la vista sin panel de administración
 };
 
-// Repertorios disponibles. Siempre habrá "Todos" como primera opción.
-// El admin podrá crear más en el futuro.
-const repertorios = [
-  'Todos',
-  'Adviento',
-  'Navidad',
-  'Cuaresma',
-  'Triduo Pascual',
-  'Pascua',
-  'Mariana',
-  'Tiempo Ordinario',
-];
-
-// Partituras de prueba. Cada una puede pertenecer a VARIOS repertorios
-// (esto se notará al filtrar: una misma obra puede aparecer al pulsar
-// "Adviento" o "Mariana" si está en ambos).
-const partiturasPrueba = [
-  {
-    id: '1',
-    titulo: 'Ave María',
-    compositor: 'Tomás Luis de Victoria',
-    repertorios: ['Mariana', 'Tiempo Ordinario'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-  {
-    id: '2',
-    titulo: 'O Magnum Mysterium',
-    compositor: 'Tomás Luis de Victoria',
-    repertorios: ['Navidad'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-  {
-    id: '3',
-    titulo: 'Adoramus Te, Christe',
-    compositor: 'Giovanni Pierluigi da Palestrina',
-    repertorios: ['Cuaresma', 'Triduo Pascual'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-  {
-    id: '4',
-    titulo: 'Christus Factus Est',
-    compositor: 'Anton Bruckner',
-    repertorios: ['Triduo Pascual'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-  {
-    id: '5',
-    titulo: 'Cantate Domino',
-    compositor: 'Giuseppe Pitoni',
-    repertorios: ['Tiempo Ordinario'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-  {
-    id: '6',
-    titulo: 'Regina Caeli',
-    compositor: 'Wolfgang Amadeus Mozart',
-    repertorios: ['Pascua', 'Mariana'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-  {
-    id: '7',
-    titulo: 'Veni Emmanuel',
-    compositor: 'Anónimo · arr. Z. Randall Stroope',
-    repertorios: ['Adviento'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-  {
-    id: '8',
-    titulo: 'Stabat Mater',
-    compositor: 'Giovanni Battista Pergolesi',
-    repertorios: ['Cuaresma', 'Mariana'],
-    enlaceDescarga: 'https://drive.google.com/file/d/EJEMPLO',
-  },
-];
-
-const audiosPrueba = [
-  {
-    id: '1',
-    titulo: 'Ave María',
-    compositor: 'Tomás Luis de Victoria',
-    repertorios: ['Mariana', 'Tiempo Ordinario'],
-    enlaceAudio: '/audio-prueba.mp3',
-  },
-  {
-    id: '2',
-    titulo: 'O Magnum Mysterium',
-    compositor: 'Tomás Luis de Victoria',
-    repertorios: ['Navidad'],
-    enlaceAudio: '/audio-prueba.mp3',
-  },
-  {
-    id: '3',
-    titulo: 'Adoramus Te, Christe',
-    compositor: 'Giovanni Pierluigi da Palestrina',
-    repertorios: ['Cuaresma', 'Triduo Pascual'],
-    enlaceAudio: '/audio-prueba.mp3',
-  },
-  {
-    id: '4',
-    titulo: 'Regina Caeli',
-    compositor: 'Wolfgang Amadeus Mozart',
-    repertorios: ['Pascua', 'Mariana'],
-    enlaceAudio: '/audio-prueba.mp3',
-  },
-];
+// Chips de filtro: "Todos" siempre primero y después los repertorios en el
+// orden que el director fija en Administración → Repertorios.
+const repertorios = [REPERTORIO_TODOS, ...repertoriosPrueba.map((r) => r.nombre)];
 
 type TipoArchivo = 'partituras' | 'audios';
 
+// useSearchParams obliga a envolver la página en Suspense para poder
+// prerenderizarla (requisito de Next 16 al compilar).
 export default function DashboardPage() {
+  return (
+    <Suspense>
+      <Dashboard />
+    </Suspense>
+  );
+}
+
+function Dashboard() {
+
+  // ?repertorio=Adviento llega desde el calendario: abre el archivo ya filtrado.
+  const searchParams = useSearchParams();
 
   // ============= ESTADOS =============
 
@@ -129,7 +45,10 @@ export default function DashboardPage() {
   const [tipoActivo, setTipoActivo] = useState<TipoArchivo>('partituras');
 
   // Repertorio activo (filtro por carpeta)
-  const [repertorioActivo, setRepertorioActivo] = useState<string>('Todos');
+  const [repertorioActivo, setRepertorioActivo] = useState<string>(() => {
+    const pedido = searchParams.get('repertorio');
+    return pedido && repertorios.includes(pedido) ? pedido : REPERTORIO_TODOS;
+  });
 
   // Texto del buscador
   const [busqueda, setBusqueda] = useState('');
@@ -186,6 +105,12 @@ export default function DashboardPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[56rem] max-w-full h-36 bg-[radial-gradient(70%_100%_at_50%_0%,rgba(153,27,27,0.05),transparent_75%)] pointer-events-none" />
 
         <div className="relative max-w-6xl mx-auto px-6 lg:px-12 py-16 md:py-20">
+
+          {/* Banda granate con la próxima celebración (lleva al calendario) */}
+          <BandaProximaCelebracion eventos={eventosPrueba} href="/miembros/dashboard/calendario" textoEnlace="Ver calendario" />
+
+          {/* Solo el Director ve el panel de administración */}
+          {usuarioPrueba.rol === 'Director' && <AdminSection />}
 
           {/* CABECERA DE SECCIÓN */}
           <div className="flex items-center justify-center gap-4 mb-10">

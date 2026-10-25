@@ -5,12 +5,14 @@ interface ProximamenteProps {
   eyebrow: string;
   titulo: string;
   subtitulo: string;
+  // Por defecto vuelve a la home; el área de miembros vuelve a su dashboard.
+  volver?: { href: string; texto: string };
 }
 
 // Página placeholder "en construcción" que respeta el sistema de diseño
 // (eyebrow → titular serif → ornamento). Evita los 404 en enlaces cuya
 // página definitiva aún no existe, con un aspecto intencionado y de marca.
-export default function Proximamente({ eyebrow, titulo, subtitulo }: ProximamenteProps) {
+export default function Proximamente({ eyebrow, titulo, subtitulo, volver = { href: '/', texto: 'Volver al inicio' } }: ProximamenteProps) {
   return (
     <main className="superficie-crema w-full min-h-[70vh] flex items-center py-32 md:py-40">
       <div className="relative z-10 max-w-3xl mx-auto px-6 lg:px-12 text-center">
@@ -49,11 +51,11 @@ export default function Proximamente({ eyebrow, titulo, subtitulo }: Proximament
         </p>
 
         <Link
-          href="/"
+          href={volver.href}
           className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-stone-600 hover:text-red-800 transition-colors border border-stone-300 hover:border-red-800 px-6 py-3 rounded-sm focus-visible:outline-2 focus-visible:outline-red-800"
         >
           <ArrowLeft size={14} strokeWidth={1.5} />
-          Volver al inicio
+          {volver.texto}
         </Link>
 
       </div>
