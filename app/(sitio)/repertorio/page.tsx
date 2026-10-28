@@ -1,5 +1,7 @@
-import Proximamente from "@/app/components/Proximamente";
+import { permanentRedirect } from "next/navigation";
 
-export default function Page() {
-  return <Proximamente eyebrow="Nuestra música" titulo="Repertorio" subtitulo="La música que servimos" />;
+// El repertorio vive en /sobre-nosotros/repertorio; esta ruta se conserva
+// para que los enlaces antiguos sigan funcionando.
+export default function RepertorioRedireccion() {
+  permanentRedirect("/sobre-nosotros/repertorio");
 }

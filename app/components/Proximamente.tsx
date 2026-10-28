@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import FondoNotas from './FondoNotas';
 
 interface ProximamenteProps {
   eyebrow: string;
@@ -15,6 +16,7 @@ interface ProximamenteProps {
 export default function Proximamente({ eyebrow, titulo, subtitulo, volver = { href: '/', texto: 'Volver al inicio' } }: ProximamenteProps) {
   return (
     <main className="superficie-crema w-full min-h-[70vh] flex items-center py-32 md:py-40">
+      <FondoNotas soloLaterales />
       <div className="relative z-10 max-w-3xl mx-auto px-6 lg:px-12 text-center">
 
         {/* EYEBROW */}

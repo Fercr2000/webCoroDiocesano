@@ -2,7 +2,7 @@
 // Cada tarjeta lleva a una sub-página del panel.
 
 import Link from 'next/link';
-import { Users, Theater, FileMusic, ListMusic, CalendarDays, ArrowRight } from 'lucide-react';
+import { Users, Theater, BookOpen, FileMusic, ListMusic, CalendarDays, ArrowRight } from 'lucide-react';
 
 const secciones = [
   {
@@ -18,6 +18,13 @@ const secciones = [
     eyebrow: 'Quién se presenta',
     titulo: 'Componentes',
     descripcion: 'Elige quién aparece en la formación de la página pública.',
+  },
+  {
+    href: '/miembros/dashboard/admin/catalogo',
+    icono: BookOpen,
+    eyebrow: 'Qué tenemos montado',
+    titulo: 'Catálogo',
+    descripcion: 'Mantén las obras que el público ve en «Repertorio».',
   },
   {
     href: '/miembros/dashboard/admin/archivos',
@@ -64,7 +71,7 @@ export default function AdminSection() {
       </p>
 
       {/* TARJETAS */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {secciones.map(({ href, icono: Icono, eyebrow, titulo, descripcion }) => (
           <Link
             key={href}

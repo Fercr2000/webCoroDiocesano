@@ -1,6 +1,6 @@
-// Fondo de notas para las páginas de Componentes y Calendario: figuras
-// musicales que flotan muy despacio por todo el ancho de la página (mismas
-// figuras que el pentagrama).
+// Fondo de notas de la web (inicio, sobre nosotros, contacto, componentes,
+// calendario y páginas "Próximamente"): figuras musicales que flotan muy
+// despacio por todo el ancho (mismas figuras que el pentagrama).
 // Rellena su contenedor, que debe ser relative; el contenido va encima con z-10.
 // Decorativo: aria-hidden, sin eventos de ratón y quieto con "reducir movimiento".
 
@@ -36,10 +36,13 @@ const NOTAS: { x: number; y: number; figura: Figura; rot: number; escala: number
   { x: 82, y: 94, figura: 'negra', rot: -4, escala: 0.8, dur: 25, retraso: -7 },
 ];
 
-export default function FondoNotas() {
+// `soloLaterales`: en páginas de texto, quita las notas del centro para que
+// no pasen por detrás de las letras (en el escenario sí asoman entre piezas).
+export default function FondoNotas({ soloLaterales = false }: { soloLaterales?: boolean }) {
+  const notas = soloLaterales ? NOTAS.filter((n) => n.x < 12 || n.x > 88) : NOTAS;
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      {NOTAS.map((n, i) => (
+      {notas.map((n, i) => (
         <span
           key={i}
           className="nota-flota absolute text-red-900/20"

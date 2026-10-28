@@ -10,9 +10,16 @@ interface RevealProps {
   children: React.ReactNode;
   className?: string;
   delay?: number; // retardo en ms para escalonar entradas
+  desde?: 'abajo' | 'izquierda' | 'derecha'; // de dónde llega al aparecer
 }
 
-export default function Reveal({ children, className = '', delay = 0 }: RevealProps) {
+const OCULTO = {
+  abajo: 'translate-y-8',
+  izquierda: '-translate-x-10',
+  derecha: 'translate-x-10',
+};
+
+export default function Reveal({ children, className = '', delay = 0, desde = 'abajo' }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -43,8 +50,8 @@ export default function Reveal({ children, className = '', delay = 0 }: RevealPr
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-[900ms] ease-out motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:translate-y-0 ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      className={`transition-all duration-[900ms] ease-out motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:translate-x-0 motion-reduce:translate-y-0 ${
+        visible ? 'opacity-100 translate-x-0 translate-y-0' : `opacity-0 ${OCULTO[desde]}`
       } ${className}`}
     >
       {children}

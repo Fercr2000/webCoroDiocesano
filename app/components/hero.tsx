@@ -17,7 +17,7 @@ const slides = [
     image: '/sliderRepertorio.png',
     title: 'Servir cantando, cantar sirviendo',
     subtitle: 'Música sacra al servicio de la Liturgia y la Iglesia diocesana',
-    primaryButton: { label: 'Repertorio', href: '/repertorio' },
+    primaryButton: { label: 'Repertorio', href: '/sobre-nosotros/repertorio' },
     secondaryButton: { label: 'Próximas celebraciones', href: '/calendario' },
   },
 ];

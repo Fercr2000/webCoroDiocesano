@@ -1,3 +1,5 @@
+import FondoNotas from './FondoNotas';
+
 export default function About() {
 
   return (
@@ -6,6 +8,9 @@ export default function About() {
       id="quienes-somos"
       className="superficie-crema w-full py-32 md:py-40"
     >
+
+      {/* Notas flotando de fondo, como en el resto de la web */}
+      <FondoNotas soloLaterales />
 
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-900/30 to-transparent" />
 

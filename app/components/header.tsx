@@ -19,7 +19,7 @@ const sobreNosotros = [
   { href: '/sobre-nosotros/esencia', label: 'Esencia' },
   { href: '/sobre-nosotros/director', label: 'Director' },
   { href: '/sobre-nosotros/componentes', label: 'Componentes' },
-  { href: '/sobre-nosotros/directiva', label: 'Directiva' },
+  { href: '/sobre-nosotros/responsables', label: 'Responsables' },
   { href: '/sobre-nosotros/repertorio', label: 'Repertorio' },
 ];
 

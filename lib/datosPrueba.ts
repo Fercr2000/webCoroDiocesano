@@ -1,11 +1,12 @@
 // Datos de prueba del archivo musical, compartidos por el dashboard y las
 // páginas de administración. Con Supabase desaparecen: vendrán de las tablas
-// `usuarios`, `repertorios`, `partituras`, `audios`, `eventos` y sus tablas de unión.
+// `usuarios`, `componentes`, `obras`, `repertorios`, `partituras`, `audios`, `eventos` y sus tablas de unión.
 
 import type { Repertorio, Partitura, Audio } from './archivo';
 import type { Evento } from './calendario';
 import type { Usuario } from './roles';
 import type { Componente } from './formacion';
+import type { Obra } from './catalogo';
 
 // Repertorios en el orden en que aparecen como filtros ("Todos" es virtual y no está aquí).
 export const repertoriosPrueba: Repertorio[] = [
@@ -196,3 +197,34 @@ export const usuariosPrueba: Usuario[] = [
 // Componentes de la página pública. De partida, los mismos miembros (sin
 // email); el director añade o quita nombres desde Administración → Componentes.
 export const componentesPrueba: Componente[] = usuariosPrueba.map(({ id, nombre, rol }) => ({ id: `c${id}`, nombre, rol }));
+
+// Catálogo público de obras montadas (solo datos de catálogo).
+export const obrasPrueba: Obra[] = [
+  { id: 'o1', titulo: 'Misa de Angelis', compositor: 'Anónimo', fechas: 's. XV–XVI', tipo: 'Misa completa', epoca: 'Gregoriano', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o2', titulo: 'Missa O magnum mysterium', compositor: 'Tomás Luis de Victoria', fechas: '1548–1611', tipo: 'Misa completa', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o3', titulo: 'Kyrie (Misa en sol)', compositor: 'Franz Schubert', fechas: '1797–1828', tipo: 'Kyrie', epoca: 'Romanticismo', formacion: 'Coro y orquesta', idioma: 'Griego' },
+  { id: 'o4', titulo: 'Gloria (RV 589)', compositor: 'Antonio Vivaldi', fechas: '1678–1741', tipo: 'Gloria', epoca: 'Barroco', formacion: 'Coro y orquesta', idioma: 'Latín' },
+  { id: 'o5', titulo: 'Credo III', compositor: 'Anónimo', fechas: 's. XVII', tipo: 'Credo', epoca: 'Gregoriano', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o6', titulo: 'Sanctus (Misa de la Coronación)', compositor: 'Wolfgang Amadeus Mozart', fechas: '1756–1791', tipo: 'Sanctus', epoca: 'Clasicismo', formacion: 'Coro y orquesta', idioma: 'Latín' },
+  { id: 'o7', titulo: 'Agnus Dei', compositor: 'Samuel Barber', fechas: '1910–1981', tipo: 'Agnus Dei', epoca: 'Siglo XX', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o8', titulo: 'Aleluya de Pascua', compositor: 'Anónimo', fechas: 's. X', tipo: 'Aleluya', epoca: 'Gregoriano', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o9', titulo: 'Aleluya (El Mesías)', compositor: 'Georg Friedrich Händel', fechas: '1685–1759', tipo: 'Aleluya', epoca: 'Barroco', formacion: 'Coro y orquesta', idioma: 'Otros' },
+  { id: 'o10', titulo: 'El Señor es mi pastor (Salmo 22)', compositor: 'Joseph Gelineau', fechas: '1920–2008', tipo: 'Salmo', epoca: 'Siglo XX', formacion: 'Coro y órgano', idioma: 'Castellano' },
+  { id: 'o11', titulo: 'Ave verum corpus', compositor: 'Wolfgang Amadeus Mozart', fechas: '1756–1791', tipo: 'Comunión', epoca: 'Clasicismo', formacion: 'Coro y órgano', idioma: 'Latín' },
+  { id: 'o12', titulo: 'O sacrum convivium', compositor: 'Thomas Tallis', fechas: '1505–1585', tipo: 'Comunión', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o13', titulo: 'Ave Maria', compositor: 'Tomás Luis de Victoria', fechas: '1548–1611', tipo: 'Motete', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o14', titulo: 'O magnum mysterium', compositor: 'Tomás Luis de Victoria', fechas: '1548–1611', tipo: 'Motete', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o15', titulo: 'Sicut cervus', compositor: 'Giovanni Pierluigi da Palestrina', fechas: '1525–1594', tipo: 'Motete', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o16', titulo: 'Adoramus te, Christe', compositor: 'Giovanni Pierluigi da Palestrina', fechas: '1525–1594', tipo: 'Motete', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o17', titulo: 'Christus factus est', compositor: 'Anton Bruckner', fechas: '1824–1896', tipo: 'Motete', epoca: 'Romanticismo', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o18', titulo: 'Ubi caritas', compositor: 'Ola Gjeilo', fechas: '1978', tipo: 'Motete', epoca: 'Siglo XXI', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o19', titulo: 'Regina caeli', compositor: 'Wolfgang Amadeus Mozart', fechas: '1756–1791', tipo: 'Antífona mariana', epoca: 'Clasicismo', formacion: 'Coro y orquesta', idioma: 'Latín' },
+  { id: 'o20', titulo: 'Salve Regina', compositor: 'Anónimo', fechas: 's. XI', tipo: 'Antífona mariana', epoca: 'Gregoriano', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o21', titulo: 'Magnificat', compositor: 'Johann Pachelbel', fechas: '1653–1706', tipo: 'Magníficat', epoca: 'Barroco', formacion: 'Coro y órgano', idioma: 'Latín' },
+  { id: 'o22', titulo: 'Stabat Mater', compositor: 'Giovanni Battista Pergolesi', fechas: '1710–1736', tipo: 'Himno', epoca: 'Barroco', formacion: 'Coro y orquesta', idioma: 'Latín' },
+  { id: 'o23', titulo: 'Veni Creator Spiritus', compositor: 'Anónimo', fechas: 's. IX', tipo: 'Himno', epoca: 'Gregoriano', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o24', titulo: 'Pueblo de reyes', compositor: 'Lucien Deiss', fechas: '1921–2007', tipo: 'Canto de entrada', epoca: 'Siglo XX', formacion: 'Coro y órgano', idioma: 'Castellano' },
+  { id: 'o25', titulo: 'Pescador de hombres', compositor: 'Cesáreo Gabaráin', fechas: '1936–1991', tipo: 'Canto de comunión', epoca: 'Siglo XX', formacion: 'Coro y órgano', idioma: 'Castellano' },
+  { id: 'o26', titulo: 'Veni, veni Emmanuel', compositor: 'Anónimo · arr. Z. Randall Stroope', fechas: 's. XV', tipo: 'Villancico', epoca: 'Siglo XXI', formacion: 'A capella', idioma: 'Latín' },
+  { id: 'o27', titulo: 'Riu, riu, chiu', compositor: 'Anónimo (Cancionero de Upsala)', fechas: 's. XVI', tipo: 'Villancico', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Castellano' },
+];

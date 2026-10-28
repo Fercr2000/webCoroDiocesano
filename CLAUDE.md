@@ -43,7 +43,9 @@ lib/
 ├── datosPrueba.ts                   ← usuarios (50, formación completa), repertorios, partituras, audios y eventos de prueba
 ├── formacion.ts                     ← tipo Componente y secciones del escenario: roles, grupo, posición (+ orden móvil)
 ├── fechas.ts                        ← aritmética de fechas 'AAAA-MM-DD' en hora local (ver §12)
-└── calendario.ts                    ← tipo Evento, convocatorias por sección y exportación .ics
+├── calendario.ts                    ← tipo Evento, convocatorias por sección y exportación .ics
+├── responsables.ts                  ← responsables: cargo, nombre, cita, resumen y carta completa
+└── catalogo.ts                      ← obras del catálogo público: tipos, épocas, formaciones, idiomas y agrupar()
 
 app/
 ├── layout.tsx                       ← layout raíz (sin Header/Footer, solo <html><body>)
@@ -62,10 +64,14 @@ app/
 │   ├── Proximamente.tsx             ← placeholder "en construcción" con el sistema de diseño (prop `volver`)
 │   ├── FondoGranateMiembros.tsx     ← fondo de la columna granate del login/recuperar
 │   ├── PentagramaOla.tsx            ← pentagrama ondulado animado; `conNotas` añade figuras que viajan (cartel y login)
-│   ├── FondoNotas.tsx               ← notas que flotan despacio por toda la página (Componentes y Calendario, público y admin)
+│   ├── FondoNotas.tsx               ← notas que flotan despacio de fondo: secciones claras de inicio, Próximamente (sobre nosotros, contacto…), componentes y calendario. `soloLaterales` en páginas de texto
 │   ├── componentes/
 │   │   ├── Escenario.tsx            ← plano de la formación: un punto por miembro + "programa de mano" (prop `edicion` en admin)
 │   │   └── IconoSeccion.tsx         ← icono de línea por sección (corcheas, violín, timbales, teclado, batuta…)
+│   ├── catalogo/                    ← Catalogo.tsx (índice agrupado) y SelectorAgrupacion.tsx (desplegable)
+│   ├── responsables/
+│   │   ├── FotoResponsable.tsx      ← foto cuadrada con marco (o inicial si no hay foto), tono granate o claro
+│   │   └── CartaResponsable.tsx     ← carta completa de un responsable (composición de "Palabras del director")
 │   └── calendario/                  ← calendario compartido por la web pública y el área de miembros
 │       ├── Calendario.tsx           ← cartel + agenda por meses + pasadas; solo celebraciones (prop `modo`)
 │       ├── CartelProximaCelebracion.tsx ← panel granate: cuenta atrás + pie con pentagrama que sale de la catedral
@@ -82,7 +88,7 @@ app/
 │   ├── contacto/, repertorio/       ← placeholders Proximamente
 │   └── sobre-nosotros/
 │       ├── componentes/page.tsx     ← plano del escenario con los componentes (nombre completo)
-│       └── (+ índice, esencia, director, directiva, repertorio) ← placeholders
+│       └── (+ índice, esencia, director, responsables, repertorio) ← placeholders
 │
 └── miembros/                        ← área privada (SIN Header/Footer del sitio público)
     ├── layout.tsx                   ← layout mínimo
@@ -95,7 +101,7 @@ app/
         │   ├── DashboardHeader.tsx  ← cabecera del área privada con saludo
         │   ├── FileCard.tsx         ← tarjeta de partitura
         │   ├── AudioPlayer.tsx      ← exporta AudioCard (tarjeta de audio con reproductor)
-        │   ├── AdminSection.tsx     ← bloque "Administración" con 5 tarjetas (solo Director)
+        │   ├── AdminSection.tsx     ← bloque "Administración" con 6 tarjetas (solo Director)
         │   ├── Modal.tsx            ← modal base + BotonPrincipal/BotonSecundario
         │   └── ConfirmDialog.tsx    ← confirmación genérica (usuarios y repertorios)
         └── admin/
@@ -106,6 +112,7 @@ app/
             │       ├── CreateUserModal.tsx   ← crear y editar (si recibe `usuario`)
             │       └── PasswordDialog.tsx    ← muestra la contraseña generada una sola vez
             ├── componentes/page.tsx ← mismo plano en modo edición: añadir y quitar nombres por sección
+            ├── catalogo/            ← catálogo público de obras EN MEMORIA (page + ObraModal)
             ├── archivos/page.tsx    ← placeholder Proximamente
             ├── calendario/
             │   ├── page.tsx         ← gestión de eventos EN MEMORIA (crear, editar, duplicar +7 días, eliminar)
@@ -152,6 +159,8 @@ Desde el rediseño de julio de 2026 **ya no se usan fondos crema/ámbar**: todo 
 - El contenido sobre estas superficies necesita `relative z-10` (el grano va en `::before`).
 
 ### Movimiento
+
+- **Fondo de notas** (`<FondoNotas />`, dentro de una sección `relative`) en todas las páginas claras salvo el hero y el área privada general. En páginas con texto centrado usar `soloLaterales`.
 
 - Animaciones con nombre: `.kenburns` (hero), `.respira` (foco de luz), `.pentagrama-ola`, `.chevron-cue`, y `@keyframes fadeIn` (se usa con `animate-[fadeIn_...]`).
 - `<Reveal>` para secciones que aparecen al hacer scroll.
@@ -384,10 +393,25 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - **Móvil:** la formación se lee por filas (fondo → público) y el programa se abre bajo la fila pulsada.
 - Las secciones y posiciones se editan en `lib/formacion.ts`; cada rol cae solo en su sección.
 
+### Responsables (`/sobre-nosotros/responsables`, antes "Directiva")
+
+- **Tríptico de tres calles IGUALES, sin jerarquía, las tres en granate** (mismo fondo que el cartel del calendario): Delegado de Liturgia (D. Antonio Lara Polaina) · Director (Fernando J. Camacho Rizquez, en el centro solo por composición) · Delegado de Coros (D. Idelfonso Rueda Jandula, grafía tal como la dio Fernando; pendiente confirmar "Ildefonso"/"Jándula").
+- **Fotos cuadradas con el marco de "Palabras del director"** (esquinas + marco exterior fino), NO en arco. De momento sin fotos: marcador con la inicial en serif (también la del Director).
+- Cita breve, ornamento y resumen con la capital de "Palabras del director". **Las tres calles tienen "Leer la carta completa"**, alineado abajo.
+- **Cartas completas** con la composición de "Palabras del director" (`CartaResponsable`): la del Director en `/sobre-nosotros/director`; las de los delegados en `/sobre-nosotros/responsables/[slug]` (estáticas, `dynamicParams = false`).
+- Datos y textos (de muestra) en `lib/responsables.ts`. Mismo tamaño de calle, foto y texto en las tres; laterales entran desde los lados (`<Reveal desde="izquierda|derecha">`); en móvil, mismo orden que en escritorio.
+
+### Repertorio público (`/sobre-nosotros/repertorio`)
+
+- **Catálogo de obras montadas**, solo de consulta: título, autor (y fechas), tipo, época, formación e idioma. **Nada de audios, partituras ni repertorios litúrgicos** (eso es del área de miembros).
+- Estilo índice de programa impreso: cabecera serif por grupo y, en cada obra, título y autor unidos por línea de puntos, con etiquetas de catálogo debajo.
+- **Desplegable "Agrupar por"** (`SelectorAgrupacion`, accesible con teclado): Tipo de obra (familias: Ordinario de la misa, Propio de la misa, Motetes y antífonas, Himnos y cantos, Navidad), Autor (los "Anónimo…" juntos al final), Época (cronológica), Formación, Idioma y Título A–Z. Más buscador e índice para saltar a cada grupo.
+- `/repertorio` redirige (308) aquí. Lo gestiona el director en `/miembros/dashboard/admin/catalogo` (crear, editar, quitar). Datos en `lib/catalogo.ts` (tipos y `agrupar`) y `obrasPrueba`.
+
 ### UX del director
 
 - **Detección de rol:** si `rol === 'Director'`, se muestra la sección de Administración arriba del dashboard.
-- **5 sub-páginas de admin:** Usuarios, Componentes, Archivos, Repertorios, Calendario (cada una en su ruta).
+- **6 sub-páginas de admin:** Usuarios, Componentes, Catálogo, Archivos, Repertorios, Calendario (cada una en su ruta).
 - **Modales para acciones:** crear/editar usuario, confirmar eliminación, mostrar contraseña generada.
 - **Filtros por sección (grupos de rol)** en la gestión de usuarios: Todos, Voces, Cuerda, Viento, Otros, Dirección.
 
@@ -408,7 +432,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Sitio público (`/`)
 
-- [x] Header con menú desplegable "Sobre nosotros" (Esencia, Director, Componentes, Directiva, Repertorio) y botón "Área de miembros" que lleva al login.
+- [x] Header con menú desplegable "Sobre nosotros" (Esencia, Director, Componentes, Responsables, Repertorio) y botón "Área de miembros" que lleva al login.
 - [x] Hero con slider de 2 slides, botones contextuales por slide, indicadores, cambio automático cada 6s.
 - [x] Sección "Quiénes somos" con titular en dos partes ("Servir cantando / Cantar sirviendo") y cita destacada.
 - [x] "Palabras del director" con foto vertical, capitular granate, tres párrafos, cita de San Agustín, firma.
@@ -489,7 +513,10 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 - [x] `/sobre-nosotros/componentes` — plano del escenario con un punto por miembro, iconos, marco del coro de la Catedral y programa de mano animado (datos de prueba).
 - [x] `/miembros/dashboard/admin/componentes` — gestión de componentes sobre el plano, **en memoria**.
-- [ ] Contenido real de las páginas del submenú "Sobre nosotros": Esencia, Director, Directiva, Repertorio (hoy son placeholders).
+- [x] `/sobre-nosotros/responsables` — tríptico de responsables (textos de muestra; faltan fotos de los delegados).
+- [x] `/sobre-nosotros/director` y `/sobre-nosotros/responsables/[slug]` — cartas completas (textos de muestra).
+- [x] `/sobre-nosotros/repertorio` — catálogo público agrupable + gestión en admin (en memoria).
+- [ ] Contenido real de "Sobre nosotros → Esencia" (hoy placeholder).
 - [ ] **Conectar calendario** a Supabase (tabla `eventos`, ver §5). Hoy el admin, el calendario de miembros y el público tienen cada uno su copia en memoria.
 - [ ] Contenido real de `/repertorio` y `/contacto`.
 - [ ] Apertura pública: quitar la protección con contraseña (borrar `ACCESO_USUARIO`/`ACCESO_CLAVE` en Vercel) y, si procede, dominio propio.
