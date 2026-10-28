@@ -411,7 +411,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Contacto (`/contacto`)
 
-- **Dos formularios con deslizador cápsula:** "Quiero unirme" (el mismo `FormularioInscripcion` del inicio: coralista/instrumentista) y "Contar con vosotros" (`FormularioContratacion`: datos, entidad, fecha prevista y lugar; **sin tipo de celebración ni formación**, no se ofrecen esas opciones). **Ambos con mensaje**; en el de contratación es obligatorio.
+- **Dos formularios, elegidos con dos tarjetas grandes FUERA de la tarjeta del formulario** ("¿Qué te trae por aquí?"; la elegida en granate con un pico hacia el formulario), para no confundirse con el deslizador coralista/instrumentista de dentro: "Quiero unirme" (el mismo `FormularioInscripcion` del inicio: coralista/instrumentista) y "Contar con vosotros" (`FormularioContratacion`: datos, entidad, fecha prevista y lugar; **sin tipo de celebración ni formación**, no se ofrecen esas opciones). **Ambos con mensaje**; en el de contratación es obligatorio.
 - **Sin precios ni tarifas**: una nota aclara que todo se habla con cada persona.
 - **Panel granate "Llámanos"** con los teléfonos del Director y del Coordinador (Delegado de Coros), enlaces `tel:` y pentagrama con notas; debajo, email, Instagram y sede. En móvil, el panel de teléfonos va primero.
 - ⚠️ **Teléfonos de muestra** (600 000 001/002) en `lib/contacto.ts`: sustituir por los reales. Los formularios aún no envían nada (pendiente Resend).

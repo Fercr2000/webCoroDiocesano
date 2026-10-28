@@ -103,16 +103,16 @@ export default function FormularioInscripcion() {
       <button
         type="button"
         onClick={() => setTipo('coralista')}
-        className={`relative z-10 flex items-center justify-center gap-4 py-6 transition-colors duration-300 ${
+        className={`relative z-10 flex items-center justify-center gap-2 sm:gap-4 py-4 sm:py-6 transition-colors duration-300 ${
           tipo === 'coralista' ? 'text-stone-50' : 'text-stone-500 hover:text-stone-800'
         }`}
       >
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="flex-shrink-0">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="flex-shrink-0 hidden sm:block">
           <ellipse cx="6" cy="17" rx="4" ry="3" fill="currentColor" />
           <line x1="10" y1="17" x2="10" y2="3" stroke="currentColor" strokeWidth="1.5" />
           <path d="M10 3 Q 18 6 18 12" stroke="currentColor" strokeWidth="1.5" fill="none" />
         </svg>
-        <span className="text-sm md:text-base tracking-[0.3em] uppercase font-medium">
+        <span className="text-xs sm:text-sm md:text-base tracking-[0.15em] sm:tracking-[0.3em] uppercase font-medium">
           Coralista
         </span>
       </button>
@@ -120,17 +120,17 @@ export default function FormularioInscripcion() {
       <button
         type="button"
         onClick={() => setTipo('instrumentista')}
-        className={`relative z-10 flex items-center justify-center gap-4 py-6 transition-colors duration-300 ${
+        className={`relative z-10 flex items-center justify-center gap-2 sm:gap-4 py-4 sm:py-6 transition-colors duration-300 ${
           tipo === 'instrumentista' ? 'text-stone-50' : 'text-stone-500 hover:text-stone-800'
         }`}
       >
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="flex-shrink-0">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="flex-shrink-0 hidden sm:block">
           <line x1="2" y1="6" x2="20" y2="6" stroke="currentColor" strokeWidth="0.7" opacity="0.5" />
           <line x1="2" y1="11" x2="20" y2="11" stroke="currentColor" strokeWidth="0.7" opacity="0.5" />
           <line x1="2" y1="16" x2="20" y2="16" stroke="currentColor" strokeWidth="0.7" opacity="0.5" />
           <path d="M11 2 C 14 4, 14 8, 11 11 C 8 14, 8 18, 11 20" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
         </svg>
-        <span className="text-sm md:text-base tracking-[0.3em] uppercase font-medium">
+        <span className="text-xs sm:text-sm md:text-base tracking-[0.15em] sm:tracking-[0.3em] uppercase font-medium">
           Instrumentista
         </span>
       </button>

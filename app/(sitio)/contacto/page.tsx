@@ -39,12 +39,8 @@ export default function ContactoPage() {
 
         <div className="grid lg:grid-cols-[1fr_21rem] gap-10 lg:gap-12 items-start">
 
-          {/* ============= FORMULARIOS ============= */}
-          <div className="relative bg-gradient-to-b from-white to-stone-100 border border-stone-200/80 rounded-sm shadow-xl shadow-red-900/10 px-6 py-8 md:px-10 md:py-10">
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-red-800 to-red-950" />
-            <div className="absolute top-3 right-3 w-4 h-4 border-t border-r border-red-800/20" />
-            <SelectorFormulario />
-          </div>
+          {/* ============= ELECCIÓN + FORMULARIO ============= */}
+          <SelectorFormulario />
 
           {/* ============= TELÉFONOS Y DATOS (primero en móvil) ============= */}
           <aside className="order-first lg:order-none lg:sticky lg:top-32 space-y-6">
