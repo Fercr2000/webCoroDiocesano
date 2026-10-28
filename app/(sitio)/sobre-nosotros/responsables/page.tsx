@@ -4,6 +4,12 @@ import Reveal from "@/app/components/Reveal";
 import FondoNotas from "@/app/components/FondoNotas";
 import FotoResponsable from "@/app/components/responsables/FotoResponsable";
 import { RESPONSABLES, enlaceCarta, type Responsable } from "@/lib/responsables";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Responsables",
+  description: "Quienes acompañan y guían el servicio del coro.",
+};
 
 // Responsables del coro presentados como un tríptico, a la manera de un
 // retablo de tres calles: las tres iguales, en granate y sin jerarquía (el
@@ -19,7 +25,7 @@ export default function ResponsablesPage() {
     <main className="superficie-crema w-full py-12 md:py-16">
       <FondoNotas soloLaterales />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* CABECERA DE SECCIÓN */}
         <div className="flex items-center justify-center gap-4 mb-6">

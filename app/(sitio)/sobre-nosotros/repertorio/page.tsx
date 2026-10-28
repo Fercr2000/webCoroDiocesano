@@ -1,6 +1,12 @@
 import Catalogo from "@/app/components/catalogo/Catalogo";
 import FondoNotas from "@/app/components/FondoNotas";
 import { obrasPrueba } from "@/lib/datosPrueba";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Repertorio",
+  description: "Catálogo de las obras de música sacra que tenemos montadas.",
+};
 
 // Catálogo público de las obras que el coro tiene montadas: solo título,
 // autor y datos de catálogo (sin audios, partituras ni repertorios, que son
@@ -10,7 +16,7 @@ export default function RepertorioPage() {
     <main className="superficie-crema w-full py-12 md:py-16">
       <FondoNotas soloLaterales />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
 
         {/* CABECERA DE SECCIÓN */}
         <div className="flex items-center justify-center gap-4 mb-6">

@@ -60,7 +60,7 @@ app/
 │   ├── hero.tsx                     ← slider de 2 slides con Ken Burns, viñeta y chevron
 │   ├── about.tsx                    ← sección "Quiénes somos"
 │   ├── palabrasDirector.tsx         ← carta del director con foto y capitular
-│   ├── inscripcion.tsx              ← sección "Forma parte" del inicio (cabecera + FormularioInscripcion)
+│   ├── inicio/                      ← ProximaCelebracionInicio, Descubre y FormaParte (secciones de la home)
 │   ├── FormularioInscripcion.tsx    ← formulario coralista/instrumentista (inicio y contacto)
 │   ├── contacto/                    ← SelectorFormulario (unirme/contar) y FormularioContratacion
 │   ├── formulario.tsx               ← Field, Select e inputClasses compartidos (inscripción + modales admin)
@@ -89,7 +89,7 @@ app/
 │
 ├── (sitio)/                         ← route group, incluye Header y Footer
 │   ├── layout.tsx
-│   ├── page.tsx                     ← home: Hero + About + Director + Inscripción
+│   ├── page.tsx                     ← home (ver §6 "Inicio")
 │   ├── calendario/page.tsx          ← calendario público: SOLO celebraciones, sin datos internos
 │   ├── contacto/page.tsx            ← formularios (unirse / contar con el coro) + teléfonos y datos
 │   ├── repertorio/                  ← redirige a /sobre-nosotros/repertorio
@@ -168,6 +168,7 @@ Desde el rediseño de julio de 2026 **ya no se usan fondos crema/ámbar**: todo 
 ### Movimiento
 
 - **Fondo de notas** (`<FondoNotas />`, dentro de una sección `relative`) en todas las páginas claras salvo el hero y el área privada general. En páginas con texto centrado usar `soloLaterales`.
+- **Anchos de página (sin márgenes laterales excesivos):** contenedores `max-w-7xl` en las páginas anchas (inicio, sobre nosotros, componentes, galería, contacto, responsables, cartas), `max-w-6xl` en repertorio y catálogo, `max-w-5xl` en calendario. Las notas `soloLaterales` se pegan a los bordes para quedarse en el margen. Solo se dejan estrechos los textos puros (`Proximamente`) y el cierre "Forma parte".
 
 - Animaciones con nombre: `.kenburns` (hero), `.respira` (foco de luz), `.pentagrama-ola`, `.chevron-cue`, y `@keyframes fadeIn` (se usa con `animate-[fadeIn_...]`).
 - `<Reveal>` para secciones que aparecen al hacer scroll.
@@ -408,6 +409,12 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - **Sin historia ni línea del tiempo:** es el primer año del coro. Bajo los temas, botón "Ver la galería" → `/sobre-nosotros/galeria` (placeholder, también en el menú).
 - Cierre granate con invitación (inscripción y componentes) y pentagrama con notas.
 - Todos los textos, años e hitos son de muestra (mockup).
+
+### Inicio (`/`)
+
+- **Orden:** Hero → Próxima celebración (el `CartelProximaCelebracion` completo, con catedral y pentagrama con notas) → Quiénes somos (breve, titular "Una voz de la Iglesia de Jaén" para no repetir el lema del hero, botón "Conoce más") → Palabras del director (cita, primer párrafo, firma y "Leer la carta completa") → **Forma parte** (cierre granate con pentagrama y dos botones a `/contacto?motivo=unirme|contar`) → **Descubre** (4 tarjetas con foto: Componentes, Repertorio, Galería, Calendario), al final por decisión de Fernando.
+- **El formulario de inscripción ya no está en la home**: vive en Contacto. `?motivo=` preselecciona la opción (la página de Contacto es dinámica por eso).
+- El hero se pausa al pasar el ratón o enfocarlo y no rota con "reducir movimiento".
 
 ### Contacto (`/contacto`)
 
@@ -711,7 +718,8 @@ Si en el futuro se añade otra sección privada, seguir el patrón de `miembros`
 
 ### Imágenes
 
-- Todas las imágenes en `public/`, sin subcarpetas. El hero usa `sliderUnete.png` y `sliderRepertorio.png`.
+- Todas las imágenes en `public/`, sin subcarpetas. Las fotos se usan en **JPG** (`sliderUnete.jpg`, `sliderRepertorio.jpg`, `repertorioCatSlider.jpg`, `FotoDirectrorPalabras.jpg`, ~0,1-0,7 MB); los PNG originales (4-6 MB) se conservan pero no se usan.
+- Cada página pública declara `metadata` (título y descripción); el layout raíz añade "· Coro de la Diócesis de Jaén" con `title.template`.
 - Se usan con `<Image>` de Next.js. Siempre con `alt` descriptivo y `sizes` cuando toque.
 - Los logos son sensibles a mayúsculas/minúsculas. Nombres exactos:
   - `LogoCoroDiocesano.png`

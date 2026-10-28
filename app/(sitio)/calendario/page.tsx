@@ -1,6 +1,12 @@
 import Calendario from "@/app/components/calendario/Calendario";
 import FondoNotas from "@/app/components/FondoNotas";
 import { eventosPrueba } from "@/lib/datosPrueba";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Calendario",
+  description: "Próximas celebraciones del Coro y Orquesta de la Diócesis de Jaén.",
+};
 
 // Calendario público: solo celebraciones. Los ensayos, convocatorias y
 // vestimenta son información interna y solo se ven en el área de miembros.
@@ -9,7 +15,7 @@ export default function CalendarioPage() {
     <main className="superficie-crema w-full py-12 md:py-16">
       {/* Notas flotando de lado a lado de la página */}
       <FondoNotas />
-      <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12">
 
         {/* CABECERA DE SECCIÓN */}
         <div className="flex items-center justify-center gap-4 mb-6">

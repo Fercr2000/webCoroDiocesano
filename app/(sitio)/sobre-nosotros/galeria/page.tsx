@@ -1,6 +1,12 @@
 import Galeria from "@/app/components/galeria/Galeria";
 import FondoNotas from "@/app/components/FondoNotas";
 import { albumesPrueba } from "@/lib/datosPrueba";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Galería",
+  description: "Fotos de nuestras celebraciones, conciertos, ensayos y convivencias.",
+};
 
 // Galería de fotos del coro: carpetas por celebración, concierto, ensayo o
 // convivencia. Con Supabase, los álbumes y sus fotos vendrán de la base de datos.
@@ -9,7 +15,7 @@ export default function GaleriaPage() {
     <main className="superficie-crema w-full py-12 md:py-16">
       <FondoNotas soloLaterales />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* CABECERA DE SECCIÓN */}
         <div className="flex items-center justify-center gap-4 mb-6">

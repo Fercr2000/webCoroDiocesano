@@ -57,6 +57,7 @@ export default function DashboardHeader({ nombre, rol }: DashboardHeaderProps) {
                     src="/LogoCoroDiocesano.png"
                     alt="Coro de la Diócesis de Jaén"
                     fill
+                    sizes="224px"
                     className="object-contain object-left"
                     priority
                   />

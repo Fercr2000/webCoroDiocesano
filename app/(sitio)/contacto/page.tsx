@@ -3,16 +3,26 @@ import FondoNotas from "@/app/components/FondoNotas";
 import PentagramaOla from "@/app/components/PentagramaOla";
 import SelectorFormulario from "@/app/components/contacto/SelectorFormulario";
 import { PERSONAS_CONTACTO, EMAIL_CONTACTO, INSTAGRAM, SEDE, enlaceTelefono } from "@/lib/contacto";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contacto",
+  description: "Únete al coro o cuenta con nosotros para tu celebración.",
+};
 
 // Contacto: formularios para unirse al coro o para contar con él en una
 // celebración (los dos con mensaje), y un panel con los teléfonos del
 // Director y del Coordinador, el email, Instagram y la sede.
-export default function ContactoPage() {
+// ?motivo=contar (o unirme) abre directamente esa opción: lo usan los botones
+// del inicio y de Sobre nosotros.
+export default async function ContactoPage({ searchParams }: { searchParams: Promise<{ motivo?: string }> }) {
+  const { motivo } = await searchParams;
+
   return (
     <main className="superficie-crema w-full py-12 md:py-16">
       <FondoNotas soloLaterales />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* CABECERA DE SECCIÓN */}
         <div className="flex items-center justify-center gap-4 mb-6">
@@ -40,7 +50,7 @@ export default function ContactoPage() {
         <div className="grid lg:grid-cols-[1fr_21rem] gap-10 lg:gap-12 items-start">
 
           {/* ============= ELECCIÓN + FORMULARIO ============= */}
-          <SelectorFormulario />
+          <SelectorFormulario inicial={motivo === "contar" ? "contar" : "unirme"} />
 
           {/* ============= TELÉFONOS Y DATOS (primero en móvil) ============= */}
           <aside className="order-first lg:order-none lg:sticky lg:top-32 space-y-6">

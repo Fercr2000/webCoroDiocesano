@@ -39,7 +39,11 @@ const NOTAS: { x: number; y: number; figura: Figura; rot: number; escala: number
 // `soloLaterales`: en páginas de texto, quita las notas del centro para que
 // no pasen por detrás de las letras (en el escenario sí asoman entre piezas).
 export default function FondoNotas({ soloLaterales = false }: { soloLaterales?: boolean }) {
-  const notas = soloLaterales ? NOTAS.filter((n) => n.x < 12 || n.x > 88) : NOTAS;
+  // Con el contenido más ancho, las laterales se pegan más a los bordes
+  // (la mitad de su distancia) para quedarse en el margen.
+  const notas = soloLaterales
+    ? NOTAS.filter((n) => n.x < 12 || n.x > 88).map((n) => ({ ...n, x: n.x < 50 ? n.x / 2 : 100 - (100 - n.x) / 2 }))
+    : NOTAS;
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
       {notas.map((n, i) => (

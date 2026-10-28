@@ -1,5 +1,10 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import FondoNotas from './FondoNotas';
+
+// Inicio: anticipo de la carta del director (cita, primer párrafo y firma).
+// La carta completa está en /sobre-nosotros/director.
 
 export default function Director() {
 
@@ -7,7 +12,7 @@ export default function Director() {
 
     <section
       id="director"
-      className="superficie-clara w-full py-32 md:py-40 overflow-hidden"
+      className="superficie-clara w-full py-16 md:py-24 overflow-hidden"
     >
 
       {/* Notas flotando de fondo, como en el resto de la web */}
@@ -18,7 +23,7 @@ export default function Director() {
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* EYEBROW */}
-        <div className="flex items-center justify-center gap-4 mb-12">
+        <div className="flex items-center justify-center gap-4 mb-6">
           <div className="h-px w-16 bg-red-800/60" />
           <span className="text-xs tracking-[0.4em] uppercase text-red-800 font-medium">
             Carta del director
@@ -27,16 +32,16 @@ export default function Director() {
         </div>
 
         {/* TITULAR */}
-        <h2 className="font-serif text-5xl md:text-7xl text-stone-900 text-center tracking-tight leading-[1.1] mb-6">
+        <h2 className="font-serif text-5xl md:text-7xl text-stone-900 text-center tracking-tight leading-[1.1] mb-3">
           Palabras del director
         </h2>
 
-        <p className="font-serif italic text-xl md:text-2xl text-stone-500 text-center mb-16">
+        <p className="font-serif italic text-xl md:text-2xl text-stone-500 text-center mb-6">
           Una carta abierta
         </p>
 
         {/* ORNAMENTO */}
-        <div className="flex justify-center mb-20">
+        <div className="flex justify-center mb-14">
           <svg width="100" height="14" viewBox="0 0 100 14" fill="none" className="text-red-800/70">
             <line x1="0" y1="7" x2="42" y2="7" stroke="currentColor" strokeWidth="0.5" />
             <rect x="46" y="3" width="8" height="8" transform="rotate(45 50 7)" fill="currentColor" />
@@ -48,7 +53,7 @@ export default function Director() {
         <div className="grid md:grid-cols-2 gap-16 lg:gap-24 items-stretch">
 
           {/* IZQUIERDA: FOTO */}
-          <div className="relative h-full min-h-[500px] max-w-lg mx-auto w-full">
+          <div className="relative h-full min-h-[440px] max-w-md mx-auto w-full">
 
             {/* Esquinas decorativas sutiles */}
             <div className="absolute -top-2 -left-2 w-5 h-5 border-t border-l border-red-800/30 z-20 pointer-events-none" />
@@ -63,7 +68,7 @@ export default function Director() {
             <div className="relative h-full w-full overflow-hidden shadow-2xl shadow-red-950/30">
 
               <Image
-                src="/FotoDirectrorPalabras.png"
+                src="/FotoDirectrorPalabras.jpg"
                 alt="Fernando J. Camacho Rizquez, Director del Coro de la Diócesis de Jaén"
                 fill
                 className="object-cover"
@@ -102,19 +107,6 @@ export default function Director() {
               En medio de tanto ruido, la música sacra sigue siendo uno de los pocos lugares donde el silencio tiene sentido. Donde una voz humana, sin amplificar, todavía puede conmover. Donde la belleza no se vende: se ofrece. Por eso seguimos cantándola — porque cada época la necesita a su manera, y la nuestra quizá más que ninguna.
             </p>
 
-            {/* Segundo párrafo */}
-            <p className="relative z-10 font-serif text-lg md:text-xl leading-relaxed text-stone-700">
-              Y esa música pide tiempo. Detrás de cada nota que escuchas en una celebración hay semanas de ensayo, oído atento, oración compartida y la misma frase repetida hasta que respira.{' '}
-              <span className="text-stone-900 font-medium">No es esfuerzo: es cuidado.</span>
-              {' '}<em className="text-stone-800">«Cantar es propio del que ama»</em> —decía San Agustín— y el amor siempre se toma su tiempo. El cántico nuevo del salmo no se improvisa; se prepara con paciencia, con escucha, con muchas manos.
-            </p>
-
-            {/* Tercer párrafo: invitación */}
-            <p className="relative z-10 font-serif text-lg md:text-xl leading-relaxed text-stone-700">
-              Si has llegado hasta aquí, quizá este sea tu sitio. Trae tu voz, tu instrumento, tu presencia:{' '}
-              <span className="text-stone-900 font-medium">aquí encontrarás tu sitio.</span>
-            </p>
-
             {/* FIRMA */}
             <div className="relative z-10 pt-8 mt-4 flex items-center gap-6">
               <div className="h-px w-12 bg-red-800/60 flex-shrink-0" />
@@ -127,6 +119,15 @@ export default function Director() {
                 </p>
               </div>
             </div>
+
+            {/* Carta completa */}
+            <Link
+              href="/sobre-nosotros/director"
+              className="relative z-10 group inline-flex items-center gap-2 self-start text-xs tracking-[0.3em] uppercase font-medium text-stone-600 hover:text-red-800 border-b border-stone-300 hover:border-red-800 pb-1 transition-colors"
+            >
+              Leer la carta completa
+              <ArrowRight size={14} strokeWidth={1.5} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
 
           </div>
 

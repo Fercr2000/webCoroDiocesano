@@ -38,7 +38,7 @@ export default function ComponentesAdminPage() {
         <div className="absolute inset-y-0 left-0 w-[9%] max-w-[14rem] bg-gradient-to-r from-red-900/[0.10] to-transparent pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-[9%] max-w-[14rem] bg-gradient-to-l from-red-900/[0.10] to-transparent pointer-events-none" />
 
-        <div className="relative max-w-6xl mx-auto px-6 lg:px-12 py-8 md:py-10">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 py-8 md:py-10">
 
           <Link
             href="/miembros/dashboard"

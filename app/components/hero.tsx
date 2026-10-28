@@ -7,14 +7,14 @@ import { ChevronDown } from 'lucide-react';
 
 const slides = [
   {
-    image: '/sliderUnete.png',
+    image: '/sliderUnete.jpg',
     title: 'Tu voz, tu instrumento, su gloria',
     subtitle: 'Únete al Coro y Orquesta de la Diócesis de Jaén',
-    primaryButton: { label: 'Quiero unirme', href: '/#inscripcion' },
+    primaryButton: { label: 'Quiero unirme', href: '/contacto?motivo=unirme' },
     secondaryButton: { label: 'Conócenos', href: '/sobre-nosotros' },
   },
   {
-    image: '/sliderRepertorio.png',
+    image: '/sliderRepertorio.jpg',
     title: 'Servir cantando, cantar sirviendo',
     subtitle: 'Música sacra al servicio de la Liturgia y la Iglesia diocesana',
     primaryButton: { label: 'Repertorio', href: '/sobre-nosotros/repertorio' },
@@ -25,17 +25,28 @@ const slides = [
 export default function Hero() {
 
   const [current, setCurrent] = useState(0);
+  // El pase automático se detiene al pasar el ratón o al enfocar el hero
+  // (pauta de accesibilidad: el movimiento automático debe poder pararse).
+  const [pausado, setPausado] = useState(false);
 
   useEffect(() => {
+    // Con "reducir movimiento" no hay pase automático: se cambia con los indicadores.
+    if (pausado || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [pausado]);
 
   return (
 
-    <section className="relative h-[80vh] w-full overflow-hidden">
+    <section
+      className="relative h-[80vh] w-full overflow-hidden"
+      onMouseEnter={() => setPausado(true)}
+      onMouseLeave={() => setPausado(false)}
+      onFocus={() => setPausado(true)}
+      onBlur={() => setPausado(false)}
+    >
 
       {/* Capas de imágenes con fade entre slides */}
       {slides.map((slide, index) => (
@@ -50,7 +61,10 @@ export default function Hero() {
             alt={slide.title}
             fill
             className="object-cover kenburns"
+            sizes="100vw"
+            // Las dos se cargan pronto: cualquiera puede ser la imagen principal (LCP) al rotar
             priority={index === 0}
+            loading={index === 0 ? undefined : 'eager'}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/80" />
           {/* Grano cinematográfico sutil sobre la imagen */}

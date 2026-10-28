@@ -16,7 +16,7 @@ export default function CartaResponsable({ responsable }: { responsable: Respons
     <main className="superficie-clara w-full py-12 md:py-16 overflow-hidden">
       <FondoNotas soloLaterales />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
 
         <Link
           href="/sobre-nosotros/responsables"

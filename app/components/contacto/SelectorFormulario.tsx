@@ -10,16 +10,17 @@ import { UserPlus, CalendarHeart, Check } from 'lucide-react';
 import FormularioInscripcion from '../FormularioInscripcion';
 import FormularioContratacion from './FormularioContratacion';
 
-type Motivo = 'unirme' | 'contar';
+export type Motivo = 'unirme' | 'contar';
 
 const OPCIONES: { valor: Motivo; titulo: string; detalle: string; icono: typeof UserPlus }[] = [
   { valor: 'unirme', titulo: 'Quiero unirme', detalle: 'Cantar o tocar con nosotros', icono: UserPlus },
   { valor: 'contar', titulo: 'Contar con vosotros', detalle: 'Para una celebración', icono: CalendarHeart },
 ];
 
-export default function SelectorFormulario() {
+// `inicial` llega de la URL (/contacto?motivo=contar) para abrir ya en esa opción.
+export default function SelectorFormulario({ inicial = 'unirme' }: { inicial?: Motivo }) {
 
-  const [motivo, setMotivo] = useState<Motivo>('unirme');
+  const [motivo, setMotivo] = useState<Motivo>(inicial);
 
   return (
     <div>

@@ -13,7 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Coro de la Diócesis de Jaén",
+  // Cada página pone su título y la plantilla añade el nombre del coro.
+  title: {
+    default: "Coro de la Diócesis de Jaén",
+    template: "%s · Coro de la Diócesis de Jaén",
+  },
   description: "Coro y Orquesta de la Diócesis de Jaén · Música sacra al servicio de la Liturgia",
 };
 

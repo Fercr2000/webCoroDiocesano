@@ -1,6 +1,12 @@
 import Escenario from "@/app/components/componentes/Escenario";
 import FondoNotas from "@/app/components/FondoNotas";
 import { componentesPrueba } from "@/lib/datosPrueba";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Componentes",
+  description: "Las voces e instrumentos que forman el Coro y Orquesta de la Diócesis de Jaén.",
+};
 
 // Componentes del coro y la orquesta sobre el plano del escenario.
 // La lista la gestiona el director en Administración → Componentes (solo
@@ -11,7 +17,7 @@ export default function ComponentesPage() {
     <main className="superficie-crema w-full py-12 md:py-16">
       {/* Notas flotando de lado a lado de la página */}
       <FondoNotas />
-      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* CABECERA DE SECCIÓN */}
         <div className="flex items-center justify-center gap-4 mb-6">

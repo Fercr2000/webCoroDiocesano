@@ -7,6 +7,12 @@ import PilaresGiratorios from "@/app/components/sobreNosotros/PilaresGiratorios"
 import Temas from "@/app/components/sobreNosotros/Temas";
 import Cifras from "@/app/components/sobreNosotros/Cifras";
 import { componentesPrueba, obrasPrueba, eventosPrueba } from "@/lib/datosPrueba";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sobre nosotros",
+  description: "Quiénes somos, nuestros valores y cómo formar parte del coro.",
+};
 
 // "Sobre nosotros" (absorbe la antigua "Esencia"): quiénes somos en bloques
 // alternos con capital, pilares que se voltean, temas clicables (valores,
@@ -62,7 +68,7 @@ export default function SobreNosotrosPage() {
       <section className="superficie-crema w-full py-12 md:py-16 overflow-hidden">
         <FondoNotas soloLaterales />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
 
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="h-px w-16 bg-red-800/60" />
@@ -120,7 +126,7 @@ export default function SobreNosotrosPage() {
       {/* ============= LO QUE NOS MUEVE (tarjetas que se voltean) ============= */}
       <section className="superficie-clara w-full py-16 md:py-20 overflow-hidden">
         <FondoNotas soloLaterales />
-        <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
           <CabeceraSeccion eyebrow="Nuestros pilares" titulo="Lo que nos mueve" subtitulo="Pulsa cada tarjeta para descubrirla" />
           <PilaresGiratorios />
         </div>
@@ -129,7 +135,7 @@ export default function SobreNosotrosPage() {
       {/* ============= MÁS ALLÁ DE LA MÚSICA (temas clicables) + GALERÍA ============= */}
       <section className="superficie-crema w-full py-16 md:py-20 overflow-hidden">
         <FondoNotas soloLaterales />
-        <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
           <CabeceraSeccion eyebrow="Conócenos" titulo="Más allá de la música" subtitulo="Pulsa cada tema para descubrirlo" />
           <Temas />
 
@@ -156,7 +162,7 @@ export default function SobreNosotrosPage() {
         <div className="respira absolute -top-24 left-1/3 w-96 h-96 rounded-full bg-red-500/20 blur-3xl pointer-events-none" />
         <PentagramaOla conNotas duracion={48} className="bottom-4" />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-center gap-4 mb-12">
             <div className="h-px w-16 bg-stone-50/50" />
             <span className="text-xs tracking-[0.4em] uppercase text-stone-50/90 font-medium">En cifras</span>
@@ -170,7 +176,7 @@ export default function SobreNosotrosPage() {
             <p className="font-serif italic text-lg text-stone-50/75 mb-8">Tu voz, tu instrumento, su gloria</p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
-                href="/#inscripcion"
+                href="/contacto?motivo=unirme"
                 className="group relative overflow-hidden inline-flex items-center justify-center bg-stone-50 text-red-900 px-8 py-4 text-sm tracking-[0.2em] uppercase font-medium shadow-lg hover:shadow-2xl hover:shadow-red-950/50 transition-all duration-300 rounded-sm"
               >
                 <span className="relative z-10">Quiero unirme</span>

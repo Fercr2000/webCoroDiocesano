@@ -81,6 +81,7 @@ export default function Header() {
                 src="/LogoCoroDiocesano.png"
                 alt="Coro Diocesano"
                 fill
+                sizes="288px"
                 className="object-contain object-left"
                 priority
               />

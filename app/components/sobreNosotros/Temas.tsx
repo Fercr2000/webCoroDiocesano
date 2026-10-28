@@ -176,7 +176,7 @@ export default function Temas() {
                 ))}
               </ol>
               <Link
-                href="/#inscripcion"
+                href="/contacto?motivo=unirme"
                 className="relative group/btn overflow-hidden inline-flex items-center gap-2 mt-8 bg-gradient-to-br from-red-800 to-red-950 text-stone-50 px-6 py-3 text-xs tracking-[0.2em] uppercase font-medium shadow-md hover:shadow-lg hover:shadow-red-900/40 transition-all duration-300 rounded-sm"
               >
                 <span className="relative z-10 flex items-center gap-2">

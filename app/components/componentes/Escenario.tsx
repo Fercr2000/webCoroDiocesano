@@ -90,7 +90,7 @@ export default function Escenario({ componentes, edicion }: { componentes: Compo
 
       {/* ============= ESCRITORIO: plano del escenario ============= */}
       <div className="hidden md:block">
-        <div className="relative w-full aspect-[1314/918] max-w-5xl mx-auto">
+        <div className="relative w-full aspect-[1314/918] max-w-6xl mx-auto">
 
           {/* Arcos de la formación (cuerda dentro, viento fuera) y borde de la tarima */}
           <svg viewBox="0 0 1000 699" className="absolute inset-0 w-full h-full text-red-900/25" fill="none" aria-hidden="true">
