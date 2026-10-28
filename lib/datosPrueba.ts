@@ -7,6 +7,7 @@ import type { Evento } from './calendario';
 import type { Usuario } from './roles';
 import type { Componente } from './formacion';
 import type { Obra } from './catalogo';
+import type { Album } from './galeria';
 
 // Repertorios en el orden en que aparecen como filtros ("Todos" es virtual y no está aquí).
 export const repertoriosPrueba: Repertorio[] = [
@@ -227,4 +228,91 @@ export const obrasPrueba: Obra[] = [
   { id: 'o25', titulo: 'Pescador de hombres', compositor: 'Cesáreo Gabaráin', fechas: '1936–1991', tipo: 'Canto de comunión', epoca: 'Siglo XX', formacion: 'Coro y órgano', idioma: 'Castellano' },
   { id: 'o26', titulo: 'Veni, veni Emmanuel', compositor: 'Anónimo · arr. Z. Randall Stroope', fechas: 's. XV', tipo: 'Villancico', epoca: 'Siglo XXI', formacion: 'A capella', idioma: 'Latín' },
   { id: 'o27', titulo: 'Riu, riu, chiu', compositor: 'Anónimo (Cancionero de Upsala)', fechas: 's. XVI', tipo: 'Villancico', epoca: 'Renacimiento', formacion: 'A capella', idioma: 'Castellano' },
+];
+
+// Galería de prueba (curso 2026-2027). Las "fotos" son recortes de las
+// imágenes del hero y de la Catedral hasta tener las fotos reales del coro.
+export const albumesPrueba: Album[] = [
+  {
+    slug: 'misa-inicio-curso',
+    titulo: 'Misa de inicio de curso',
+    fecha: '2026-10-18',
+    lugar: 'S.I. Catedral de Jaén',
+    categoria: 'Celebraciones',
+    eventoId: 'e2',
+    descripcion: 'Nuestra primera gran celebración del curso: la Catedral llena y el coro estrenando repertorio.',
+    fotos: [
+      { id: 'misa-inicio-curso-1', src: '/sliderUnete.png', pie: 'El coro y la orquesta, al completo', proporcion: 'horizontal', encuadre: '50% 50%' },
+      { id: 'misa-inicio-curso-2', src: '/sliderUnete.png', pie: 'La batuta marca la entrada', proporcion: 'vertical', encuadre: '50% 72%', zoom: 2.6 },
+      { id: 'misa-inicio-curso-3', src: '/sliderUnete.png', pie: 'Tenores y bajos en la sillería', proporcion: 'horizontal', encuadre: '12% 45%', zoom: 2.2 },
+      { id: 'misa-inicio-curso-4', src: '/sliderUnete.png', pie: 'Al fondo, la cruz del coro', proporcion: 'vertical', encuadre: '50% 18%', zoom: 2.6 },
+      { id: 'misa-inicio-curso-5', src: '/sliderUnete.png', pie: 'Los violines, atentos al director', proporcion: 'cuadrada', encuadre: '28% 80%', zoom: 2.4 },
+      { id: 'misa-inicio-curso-6', src: '/repertorioCatSlider.png', pie: 'La cúpula de la Catedral', proporcion: 'cuadrada', encuadre: '55% 25%', zoom: 1.6 },
+      { id: 'misa-inicio-curso-7', src: '/sliderUnete.png', pie: 'Violonchelos en pleno pasaje', proporcion: 'vertical', encuadre: '72% 80%', zoom: 2.4 },
+      { id: 'misa-inicio-curso-8', src: '/sliderUnete.png', pie: 'Las voces del lado de la epístola', proporcion: 'horizontal', encuadre: '88% 45%', zoom: 2.2 },
+    ],
+  },
+  {
+    slug: 'ensayos-octubre',
+    titulo: 'Ensayos de octubre',
+    fecha: '2026-10-15',
+    lugar: 'Casa de la Iglesia · Seminario Diocesano',
+    categoria: 'Ensayos',
+    descripcion: 'Semanas de trabajo preparando la Misa de inicio de curso y las solemnidades de otoño.',
+    fotos: [
+      { id: 'ensayos-octubre-1', src: '/sliderUnete.png', pie: 'Los violines, atentos al director', proporcion: 'cuadrada', encuadre: '28% 80%', zoom: 2.4 },
+      { id: 'ensayos-octubre-2', src: '/sliderUnete.png', pie: 'El arpa, entre la cuerda y el viento', proporcion: 'cuadrada', encuadre: '40% 55%', zoom: 3 },
+      { id: 'ensayos-octubre-3', src: '/sliderUnete.png', pie: 'La batuta marca la entrada', proporcion: 'vertical', encuadre: '50% 72%', zoom: 2.6 },
+      { id: 'ensayos-octubre-4', src: '/sliderUnete.png', pie: 'Violonchelos en pleno pasaje', proporcion: 'vertical', encuadre: '72% 80%', zoom: 2.4 },
+      { id: 'ensayos-octubre-5', src: '/sliderUnete.png', pie: 'Las voces del lado de la epístola', proporcion: 'horizontal', encuadre: '88% 45%', zoom: 2.2 },
+      { id: 'ensayos-octubre-6', src: '/repertorioCatSlider.png', pie: 'Columnas del crucero', proporcion: 'vertical', encuadre: '30% 60%', zoom: 1.8 },
+    ],
+  },
+  {
+    slug: 'convivencia-bienvenida',
+    titulo: 'Convivencia de bienvenida',
+    fecha: '2026-10-03',
+    lugar: 'Casa de la Iglesia · Seminario Diocesano',
+    categoria: 'Convivencias',
+    descripcion: 'Una jornada para conocernos: oración, comida compartida y mucha música.',
+    fotos: [
+      { id: 'convivencia-bienvenida-1', src: '/sliderUnete.png', pie: 'Tenores y bajos en la sillería', proporcion: 'horizontal', encuadre: '12% 45%', zoom: 2.2 },
+      { id: 'convivencia-bienvenida-2', src: '/repertorioCatSlider.png', pie: 'La tarde entra por las ventanas', proporcion: 'horizontal', encuadre: '80% 85%', zoom: 2.4 },
+      { id: 'convivencia-bienvenida-3', src: '/sliderUnete.png', pie: 'Las voces del lado de la epístola', proporcion: 'horizontal', encuadre: '88% 45%', zoom: 2.2 },
+      { id: 'convivencia-bienvenida-4', src: '/repertorioCatSlider.png', pie: 'Luz de la vidriera', proporcion: 'vertical', encuadre: '16% 92%', zoom: 3 },
+      { id: 'convivencia-bienvenida-5', src: '/sliderUnete.png', pie: 'El arpa, entre la cuerda y el viento', proporcion: 'cuadrada', encuadre: '40% 55%', zoom: 3 },
+    ],
+  },
+  {
+    slug: 'concierto-presentacion',
+    titulo: 'Concierto de presentación',
+    fecha: '2026-09-26',
+    lugar: 'S.I. Catedral de Jaén',
+    categoria: 'Conciertos',
+    descripcion: 'El Coro y Orquesta de la Diócesis se presenta ante la ciudad con un programa de música sacra.',
+    fotos: [
+      { id: 'concierto-presentacion-1', src: '/sliderRepertorio.png', pie: 'La fachada de la Catedral de Jaén', proporcion: 'horizontal', encuadre: '50% 60%', zoom: 1.15 },
+      { id: 'concierto-presentacion-2', src: '/sliderUnete.png', pie: 'El coro y la orquesta, al completo', proporcion: 'horizontal', encuadre: '50% 50%' },
+      { id: 'concierto-presentacion-3', src: '/sliderRepertorio.png', pie: 'Torre del evangelio', proporcion: 'vertical', encuadre: '25% 25%', zoom: 2.4 },
+      { id: 'concierto-presentacion-4', src: '/sliderUnete.png', pie: 'La batuta marca la entrada', proporcion: 'vertical', encuadre: '50% 72%', zoom: 2.6 },
+      { id: 'concierto-presentacion-5', src: '/repertorioCatSlider.png', pie: 'Bóvedas de la Catedral', proporcion: 'horizontal', encuadre: '50% 50%' },
+      { id: 'concierto-presentacion-6', src: '/sliderRepertorio.png', pie: 'Torre de la epístola', proporcion: 'vertical', encuadre: '75% 25%', zoom: 2.4 },
+      { id: 'concierto-presentacion-7', src: '/sliderRepertorio.png', pie: 'La portada principal', proporcion: 'cuadrada', encuadre: '50% 85%', zoom: 2.2 },
+    ],
+  },
+  {
+    slug: 'primeros-ensayos',
+    titulo: 'Primeros ensayos',
+    fecha: '2026-09-19',
+    lugar: 'Casa de la Iglesia · Seminario Diocesano',
+    categoria: 'Ensayos',
+    descripcion: 'Así empezó todo: las primeras lecturas de partitura y los primeros acordes juntos.',
+    fotos: [
+      { id: 'primeros-ensayos-1', src: '/sliderUnete.png', pie: 'El arpa, entre la cuerda y el viento', proporcion: 'cuadrada', encuadre: '40% 55%', zoom: 3 },
+      { id: 'primeros-ensayos-2', src: '/sliderUnete.png', pie: 'Tenores y bajos en la sillería', proporcion: 'horizontal', encuadre: '12% 45%', zoom: 2.2 },
+      { id: 'primeros-ensayos-3', src: '/repertorioCatSlider.png', pie: 'Columnas del crucero', proporcion: 'vertical', encuadre: '30% 60%', zoom: 1.8 },
+      { id: 'primeros-ensayos-4', src: '/sliderUnete.png', pie: 'Los violines, atentos al director', proporcion: 'cuadrada', encuadre: '28% 80%', zoom: 2.4 },
+      { id: 'primeros-ensayos-5', src: '/sliderUnete.png', pie: 'Al fondo, la cruz del coro', proporcion: 'vertical', encuadre: '50% 18%', zoom: 2.6 },
+    ],
+  },
 ];

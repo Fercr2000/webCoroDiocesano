@@ -45,7 +45,9 @@ lib/
 ├── fechas.ts                        ← aritmética de fechas 'AAAA-MM-DD' en hora local (ver §12)
 ├── calendario.ts                    ← tipo Evento, convocatorias por sección y exportación .ics
 ├── responsables.ts                  ← responsables: cargo, nombre, cita, resumen y carta completa
-└── catalogo.ts                      ← obras del catálogo público: tipos, épocas, formaciones, idiomas y agrupar()
+├── catalogo.ts                      ← obras del catálogo público: tipos, épocas, formaciones, idiomas y agrupar()
+├── galeria.ts                       ← álbumes y fotos de la galería: categorías, proporciones
+└── contacto.ts                      ← teléfonos (de muestra), email, Instagram y sede
 
 app/
 ├── layout.tsx                       ← layout raíz (sin Header/Footer, solo <html><body>)
@@ -58,7 +60,9 @@ app/
 │   ├── hero.tsx                     ← slider de 2 slides con Ken Burns, viñeta y chevron
 │   ├── about.tsx                    ← sección "Quiénes somos"
 │   ├── palabrasDirector.tsx         ← carta del director con foto y capitular
-│   ├── inscripcion.tsx              ← formulario coralista/instrumentista
+│   ├── inscripcion.tsx              ← sección "Forma parte" del inicio (cabecera + FormularioInscripcion)
+│   ├── FormularioInscripcion.tsx    ← formulario coralista/instrumentista (inicio y contacto)
+│   ├── contacto/                    ← SelectorFormulario (unirme/contar) y FormularioContratacion
 │   ├── formulario.tsx               ← Field, Select e inputClasses compartidos (inscripción + modales admin)
 │   ├── Reveal.tsx                   ← fade-up al entrar en el viewport (envuelve secciones de la home)
 │   ├── Proximamente.tsx             ← placeholder "en construcción" con el sistema de diseño (prop `volver`)
@@ -69,6 +73,8 @@ app/
 │   │   ├── Escenario.tsx            ← plano de la formación: un punto por miembro + "programa de mano" (prop `edicion` en admin)
 │   │   └── IconoSeccion.tsx         ← icono de línea por sección (corcheas, violín, timbales, teclado, batuta…)
 │   ├── catalogo/                    ← Catalogo.tsx (índice agrupado) y SelectorAgrupacion.tsx (desplegable)
+│   ├── sobreNosotros/               ← PilaresGiratorios, Temas y Cifras (interactivos de /sobre-nosotros)
+│   ├── galeria/                     ← Galeria, CarpetaAlbum, VisorAlbum, VisorFoto y FotoRecortada
 │   ├── responsables/
 │   │   ├── FotoResponsable.tsx      ← foto cuadrada con marco (o inicial si no hay foto), tono granate o claro
 │   │   └── CartaResponsable.tsx     ← carta completa de un responsable (composición de "Palabras del director")
@@ -85,10 +91,11 @@ app/
 │   ├── layout.tsx
 │   ├── page.tsx                     ← home: Hero + About + Director + Inscripción
 │   ├── calendario/page.tsx          ← calendario público: SOLO celebraciones, sin datos internos
-│   ├── contacto/, repertorio/       ← placeholders Proximamente
+│   ├── contacto/page.tsx            ← formularios (unirse / contar con el coro) + teléfonos y datos
+│   ├── repertorio/                  ← redirige a /sobre-nosotros/repertorio
 │   └── sobre-nosotros/
 │       ├── componentes/page.tsx     ← plano del escenario con los componentes (nombre completo)
-│       └── (+ índice, esencia, director, responsables, repertorio) ← placeholders
+│       └── (+ índice "Sobre nosotros", director, responsables, repertorio; esencia redirige al índice)
 │
 └── miembros/                        ← área privada (SIN Header/Footer del sitio público)
     ├── layout.tsx                   ← layout mínimo
@@ -393,6 +400,31 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - **Móvil:** la formación se lee por filas (fondo → público) y el programa se abre bajo la fila pulsada.
 - Las secciones y posiciones se editan en `lib/formacion.ts`; cada rol cae solo en su sección.
 
+### Sobre nosotros (`/sobre-nosotros`, absorbe la antigua "Esencia")
+
+- `/sobre-nosotros/esencia` redirige (308) aquí. En el menú, la entrada se llama "Quiénes somos" y solo se marca activa en esta página exacta.
+- **Bloques alternos con capital granate** (texto a izquierda/derecha por turnos) y, al otro lado, un panel decorativo con numeral romano y una frase (granate o claro). Entran desde su lado (`Reveal desde`).
+- **Interactivos:** "Lo que nos mueve" (4 pilares en tarjetas que se voltean al pulsarlas: `PilaresGiratorios`), "Más allá de la música" (riel de 4 temas clicables: Valores, Cómo acceder —pasos + botón al formulario—, Ministerio —música en la liturgia, cita SC 112— y Familia: `Temas`) y "En cifras" (componentes, obras y celebraciones; suben al entrar en pantalla: `Cifras`).
+- **Sin historia ni línea del tiempo:** es el primer año del coro. Bajo los temas, botón "Ver la galería" → `/sobre-nosotros/galeria` (placeholder, también en el menú).
+- Cierre granate con invitación (inscripción y componentes) y pentagrama con notas.
+- Todos los textos, años e hitos son de muestra (mockup).
+
+### Contacto (`/contacto`)
+
+- **Dos formularios con deslizador cápsula:** "Quiero unirme" (el mismo `FormularioInscripcion` del inicio: coralista/instrumentista) y "Contar con vosotros" (`FormularioContratacion`: datos, entidad, fecha prevista y lugar; **sin tipo de celebración ni formación**, no se ofrecen esas opciones). **Ambos con mensaje**; en el de contratación es obligatorio.
+- **Sin precios ni tarifas**: una nota aclara que todo se habla con cada persona.
+- **Panel granate "Llámanos"** con los teléfonos del Director y del Coordinador (Delegado de Coros), enlaces `tel:` y pentagrama con notas; debajo, email, Instagram y sede. En móvil, el panel de teléfonos va primero.
+- ⚠️ **Teléfonos de muestra** (600 000 001/002) en `lib/contacto.ts`: sustituir por los reales. Los formularios aún no envían nada (pendiente Resend).
+
+### Galería (`/sobre-nosotros/galeria`)
+
+- **Carpetas (álbumes) como montones de fotos impresas** (marco blanco, giradas) que se abren en abanico al pasar el ratón; con categoría, título, fecha, lugar y nº de fotos. Agrupadas por mes, de la más reciente a la más antigua.
+- **Filtro por tipo de momento:** Celebraciones, Conciertos, Ensayos, Convivencias (chips con contador; vacíos desactivados).
+- **Álbum abierto:** hoja que sube (`animate-[subir]`) con título, texto del álbum y fotos en mosaico (`columns-*`) que entran en cascada. **Sin fecha, lugar ni enlace al calendario dentro del álbum** (decisión de Fernando).
+- **Visor a pantalla completa:** acercamiento (`animate-[acercar]`), flechas, ← → Esc, deslizar con el dedo, contador, pie y miniaturas.
+- Álbum y visor se montan con `createPortal` en `<body>`: dentro de la página (capa `z-10`) la cabecera los tapaba.
+- Fotos de muestra = recortes (`encuadre` + `zoom`) de las imágenes del hero y de la Catedral; `FotoRecortada` pide la imagen más grande según el zoom para que no se vea borrosa. Datos en `lib/galeria.ts` y `albumesPrueba`.
+
 ### Responsables (`/sobre-nosotros/responsables`, antes "Directiva")
 
 - **Tríptico de tres calles IGUALES, sin jerarquía, las tres en granate** (mismo fondo que el cartel del calendario): Delegado de Liturgia (D. Antonio Lara Polaina) · Director (Fernando J. Camacho Rizquez, en el centro solo por composición) · Delegado de Coros (D. Idelfonso Rueda Jandula, grafía tal como la dio Fernando; pendiente confirmar "Ildefonso"/"Jándula").
@@ -432,7 +464,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Sitio público (`/`)
 
-- [x] Header con menú desplegable "Sobre nosotros" (Esencia, Director, Componentes, Responsables, Repertorio) y botón "Área de miembros" que lleva al login.
+- [x] Header con menú desplegable "Sobre nosotros" (Quiénes somos, Director, Componentes, Responsables, Repertorio) y botón "Área de miembros" que lleva al login.
 - [x] Hero con slider de 2 slides, botones contextuales por slide, indicadores, cambio automático cada 6s.
 - [x] Sección "Quiénes somos" con titular en dos partes ("Servir cantando / Cantar sirviendo") y cita destacada.
 - [x] "Palabras del director" con foto vertical, capitular granate, tres párrafos, cita de San Agustín, firma.
@@ -504,7 +536,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Medio (ampliaciones importantes)
 
-- [ ] Conectar envío real del formulario de inscripción al email `corodiocesano@diocesisdejaen.es` (con Resend o similar).
+- [ ] Conectar envío real de los formularios (inscripción y contratación) al email `corodiocesano@diocesisdejaen.es` (con Resend o similar).
 - [ ] Página `/miembros/cambiar-contrasena` (referenciada desde el header del dashboard).
 - [ ] Cron job en Vercel para ping semanal a Supabase.
 - [ ] Migrar de contraseña manual a envío por email al crear usuario.
@@ -516,9 +548,11 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - [x] `/sobre-nosotros/responsables` — tríptico de responsables (textos de muestra; faltan fotos de los delegados).
 - [x] `/sobre-nosotros/director` y `/sobre-nosotros/responsables/[slug]` — cartas completas (textos de muestra).
 - [x] `/sobre-nosotros/repertorio` — catálogo público agrupable + gestión en admin (en memoria).
-- [ ] Contenido real de "Sobre nosotros → Esencia" (hoy placeholder).
+- [x] `/sobre-nosotros` — página completa con bloques, pilares, temas y cifras (textos de muestra).
+- [x] `/sobre-nosotros/galeria` — galería con carpetas, filtros, mosaico y visor (fotos de muestra).
+- [ ] Gestión de la galería desde el panel del director (crear álbumes y subir fotos).
 - [ ] **Conectar calendario** a Supabase (tabla `eventos`, ver §5). Hoy el admin, el calendario de miembros y el público tienen cada uno su copia en memoria.
-- [ ] Contenido real de `/repertorio` y `/contacto`.
+- [x] `/contacto` — formularios de unirse y de contratación + teléfonos (de muestra).
 - [ ] Apertura pública: quitar la protección con contraseña (borrar `ACCESO_USUARIO`/`ACCESO_CLAVE` en Vercel) y, si procede, dominio propio.
 - [ ] Modo oscuro (evaluar si aporta).
 - [ ] Paginación si el volumen de archivos crece mucho (>200 por rol).

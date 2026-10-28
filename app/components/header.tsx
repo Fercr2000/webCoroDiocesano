@@ -16,11 +16,12 @@ const enlaces = [
 
 // Subenlaces del desplegable "Sobre nosotros".
 const sobreNosotros = [
-  { href: '/sobre-nosotros/esencia', label: 'Esencia' },
+  { href: '/sobre-nosotros', label: 'Quiénes somos' },
   { href: '/sobre-nosotros/director', label: 'Director' },
   { href: '/sobre-nosotros/componentes', label: 'Componentes' },
   { href: '/sobre-nosotros/responsables', label: 'Responsables' },
   { href: '/sobre-nosotros/repertorio', label: 'Repertorio' },
+  { href: '/sobre-nosotros/galeria', label: 'Galería' },
 ];
 
 export default function Header() {
@@ -52,9 +53,10 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [menuAbierto]);
 
-  // Detecta la ruta activa ("/" solo coincide exacto; el resto por prefijo).
+  // Detecta la ruta activa ("/" y "/sobre-nosotros", que contiene a sus
+  // subpáginas, solo coinciden exacto; el resto por prefijo).
   const activo = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
+    href === '/' || href === '/sobre-nosotros' ? pathname === href : pathname.startsWith(href);
 
   const sobreActivo = pathname.startsWith('/sobre-nosotros');
 

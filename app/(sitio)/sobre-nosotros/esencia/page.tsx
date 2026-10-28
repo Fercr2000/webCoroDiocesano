@@ -1,5 +1,6 @@
-import Proximamente from "@/app/components/Proximamente";
+import { permanentRedirect } from "next/navigation";
 
-export default function Page() {
-  return <Proximamente eyebrow="Sobre nosotros" titulo="Nuestra esencia" subtitulo="El porqué de cantar" />;
+// "Esencia" se unió a "Sobre nosotros"; la ruta se conserva para enlaces antiguos.
+export default function EsenciaRedireccion() {
+  permanentRedirect("/sobre-nosotros");
 }
