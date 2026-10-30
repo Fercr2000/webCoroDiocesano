@@ -36,8 +36,13 @@ Node.js 20+ requerido.
 ## 3. Estructura de carpetas
 
 ```
-proxy.ts                             ← antes "middleware": protección con contraseña (Basic Auth) de toda la web
+proxy.ts                             ← antes "middleware": protección con contraseña (Basic Auth) de toda la web (excepto /api/latido)
+vercel.json                          ← cron: llama a /api/latido cada 5 días para que Supabase no se pause
+.env.example                         ← todas las variables de entorno, documentadas (copiar a .env.local)
+supabase/migrations/                 ← esquema SQL completo con RLS y buckets (validado en Postgres local, ver §8)
 lib/
+├── supabase/                        ← config.ts (supabaseConfigurado), client.ts, server.ts, admin.ts (service_role, solo servidor)
+├── correo.ts                        ← envío con Resend por API REST (solo servidor)
 ├── roles.ts                         ← 18 roles agrupados, tipos Rol/GrupoRol/Usuario, generarContrasena()
 ├── archivo.ts                       ← tipos Repertorio/Partitura/Audio y REPERTORIO_TODOS (filtro virtual)
 ├── datosPrueba.ts                   ← usuarios (50, formación completa), repertorios, partituras, audios y eventos de prueba
@@ -101,7 +106,9 @@ app/
 └── miembros/                        ← área privada (SIN Header/Footer del sitio público)
     ├── layout.tsx                   ← layout mínimo
     ├── page.tsx                     ← login (mock: admin/admin)
-    ├── recuperar/page.tsx           ← recuperar contraseña (sin envío real)
+    ├── recuperar/                   ← recuperar contraseña (Supabase si está configurado; si no, aviso honesto)
+    ├── confirmar/route.ts           ← destino del enlace del email: canjea el código y redirige (?siguiente=)
+    ├── cambiar-contrasena/          ← cambiar contraseña (pide la actual) o elegirla tras recuperar (?recuperacion=1)
     └── dashboard/
         ├── page.tsx                 ← archivo personal + banda granate; si rol === 'Director' muestra AdminSection. Acepta ?repertorio=Nombre
         ├── calendario/page.tsx      ← calendario de miembros: celebraciones con convocatoria, vestimenta y enlace al repertorio
@@ -361,7 +368,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 - **Sin registro público.** Las cuentas SOLO las crea el director desde el panel de admin.
 - **Login por email + contraseña.** No hay social login (por ahora).
-- **Recuperar contraseña:** por email con enlace de reset (cuando esté Supabase).
+- **Recuperar contraseña:** por email con enlace de Supabase → `/miembros/confirmar` → `/miembros/cambiar-contrasena?recuperacion=1`.
 - **Contraseña inicial:** al crear un usuario, el director genera una contraseña manual (con botón "Generar automáticamente" que crea una aleatoria). La contraseña se muestra en pantalla al director, que la copia y la entrega personalmente al miembro. Migración futura a enviar por email.
 
 ### UX del dashboard
@@ -422,7 +429,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - **Dos formularios, elegidos con dos tarjetas grandes FUERA de la tarjeta del formulario** ("¿Qué te trae por aquí?"; la elegida en granate con un pico hacia el formulario), para no confundirse con el deslizador coralista/instrumentista de dentro: "Quiero unirme" (el mismo `FormularioInscripcion` del inicio: coralista/instrumentista) y "Contar con vosotros" (`FormularioContratacion`: datos, entidad, fecha prevista y lugar; **sin tipo de celebración ni formación**, no se ofrecen esas opciones). **Ambos con mensaje**; en el de contratación es obligatorio.
 - **Sin precios ni tarifas**: una nota aclara que todo se habla con cada persona.
 - **Panel granate "Llámanos"** con los teléfonos del Director y del Coordinador (Delegado de Coros), enlaces `tel:` y pentagrama con notas; debajo, email, Instagram y sede. En móvil, el panel de teléfonos va primero.
-- ⚠️ **Teléfonos de muestra** (600 000 001/002) en `lib/contacto.ts`: sustituir por los reales. Los formularios aún no envían nada (pendiente Resend).
+- ⚠️ **Teléfonos de muestra** (600 000 001/002) en `lib/contacto.ts`: sustituir por los reales. Los formularios envían por Resend en cuanto haya `RESEND_API_KEY`.
 
 ### Galería (`/sobre-nosotros/galeria`)
 
@@ -474,7 +481,9 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - **Comprobación de rol en dos capas:** `proxy.ts` (redirige si no hay sesión o si no es Director en `/admin`) y políticas RLS en Supabase (aunque alguien salte la interfaz, la base de datos no le deja leer ni escribir lo que no debe).
 - **Crear usuarios desde el panel** requiere `auth.admin.createUser`, que necesita la clave `service_role`: solo en el servidor (Server Action o Route Handler), jamás en el cliente ni con prefijo `NEXT_PUBLIC_`.
 - **Google Drive** para almacenar los PDFs de partituras y MP3s de audios. Los enlaces se guardan en Supabase.
-- **Cron job en Vercel** cada 6 días para hacer ping a Supabase y evitar que se pause por inactividad (plan gratis).
+- **Cron job en Vercel** (`vercel.json`, cada 5 días) que llama a `/api/latido` y hace una consulta a Supabase para que no se pause por inactividad (plan gratis). Protegido con `CRON_SECRET`.
+- **Envío de formularios:** acción de servidor `app/acciones/formularios.ts` → Resend (`lib/correo.ts`). Revalida en servidor, campo trampa `web` contra bots, `reply_to` = email de quien escribe. Sin `RESEND_API_KEY` responde `no-configurado` y el formulario lo dice y ofrece el email del coro (nunca un éxito falso).
+- **Degradación honesta:** todo lo que depende de Supabase o Resend comprueba si está configurado (`supabaseConfigurado`, `correoConfigurado`) y, si no, avisa al usuario en vez de simular que funciona.
 - **Sin tarjeta de crédito** asociada a Supabase, garantiza cero cobro imprevisto.
 
 ---
@@ -530,6 +539,10 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - [x] Proyecto migrado de Windows a Fedora Workstation.
 - [x] Desplegado en Vercel (Hobby), protegido con contraseña vía `proxy.ts`.
 - [x] `npm run build`, `tsc` y `eslint` pasan sin errores.
+- [x] Preparado para Supabase sin credenciales: clientes en `lib/supabase/`, esquema SQL con RLS validado, `.env.example`, cron de latido.
+- [x] Páginas legales `/aviso-legal`, `/privacidad`, `/cookies` (plantilla `app/components/legal/PaginaLegal.tsx`). **Borrador**: los datos `[entre corchetes]` (NIF, domicilio, plazos…) se resaltan y debe revisarlo la Diócesis. Enlazadas desde el footer y desde las casillas de privacidad.
+- [x] Formularios de inscripción y contratación conectados a Resend (falta la clave, ver §8).
+- [x] `/miembros/cambiar-contrasena` y recuperar contraseña conectados a Supabase Auth (se activan al poner las claves).
 
 ---
 
@@ -537,16 +550,12 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Alto (necesario para MVP funcional)
 
-- [ ] **Configurar Supabase**: cuenta, proyecto, obtener URL y ANON KEY.
-- [ ] **Crear `.env.local`** con:
-  ```
-  NEXT_PUBLIC_SUPABASE_URL=...
-  NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-  ```
-- [ ] **Crear archivos** `lib/supabase/client.ts` y `lib/supabase/server.ts` (código ya diseñado en conversaciones previas, buscar en el historial si es necesario).
-- [ ] **Crear las tablas en Supabase** según el modelo de datos de la sección 5.
+- [ ] **Configurar Supabase**: cuenta, proyecto (región UE), obtener URL, `anon` y `service_role` (Project Settings → API).
+- [ ] **Crear `.env.local`** copiando `.env.example` y rellenando; las mismas variables en Vercel.
+- [ ] **Ejecutar** `supabase/migrations/20261030000000_esquema_inicial.sql` en el SQL Editor y dar de alta al primer Director (instrucciones al final del archivo).
+- [ ] **Auth → URL Configuration:** Site URL = la de Vercel y añadir `…/miembros/confirmar` a las Redirect URLs (si no, el enlace de recuperar no funciona).
+- [ ] **Resend:** crear la cuenta **con el email del coro** (con el remitente de pruebas `onboarding@resend.dev` solo se puede escribir al email de la propia cuenta) y poner `RESEND_API_KEY`. Para remitente propio hay que verificar un dominio (DNS).
 - [ ] **Conectar login real** en `app/miembros/page.tsx`. Buscar comentario `// La autenticación se activará al conectar Supabase.`
-- [ ] **Conectar recuperar contraseña** en `app/miembros/recuperar/page.tsx`.
 - [ ] **Conectar CRUD de usuarios** en `app/miembros/dashboard/admin/usuarios/page.tsx`. La interfaz ya está hecha: sustituir `usuariosPrueba` y las funciones `crearUsuario` / `editarUsuario` / `eliminarUsuario` / `restablecerContrasena` por llamadas a Supabase (Server Actions con `service_role`).
 - [ ] **Protección de rutas en `proxy.ts`** (en Next 16 el antiguo `middleware.ts` se llama `proxy.ts` y ya existe): que `/miembros/dashboard/**` requiera sesión activa y que `/miembros/dashboard/admin/**` requiera rol Director. Mantener la Basic Auth actual mientras siga en desarrollo.
 - [ ] **Crear página** `/miembros/dashboard/admin/archivos` — subir/editar partituras y audios, asignarlas a un rol y a repertorios.
@@ -555,9 +564,6 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Medio (ampliaciones importantes)
 
-- [ ] Conectar envío real de los formularios (inscripción y contratación) al email `corodiocesano@diocesisdejaen.es` (con Resend o similar).
-- [ ] Página `/miembros/cambiar-contrasena` (referenciada desde el header del dashboard).
-- [ ] Cron job en Vercel para ping semanal a Supabase.
 - [ ] Migrar de contraseña manual a envío por email al crear usuario.
 
 ### Bajo (mejoras futuras)
@@ -758,7 +764,7 @@ Si en el futuro se añade otra sección privada, seguir el patrón de `miembros`
 ### Sobre el contenido
 
 - El director/dev es la misma persona: cuidado con la voz en primera persona. En "Palabras del director" firma él, pero en el UI general se usa segunda persona ("tu archivo", "tu música").
-- Los textos legales (privacidad, uso de datos) son placeholder. Antes de despliegue real hace falta redactar términos serios (probablemente con asesoría de la Diócesis).
+- Los textos legales son un **borrador** con datos `[entre corchetes]` por confirmar (titular, NIF, domicilio, DPD, plazos, consentimiento de menores). Antes de abrir la web al público, que los revise la Diócesis. Si se añade analítica o vídeos de terceros, revisar `/cookies` (harían falta banner y consentimiento).
 
 ---
 

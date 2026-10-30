@@ -3,10 +3,11 @@
 // Formulario para contar con el coro en una celebración (boda, funeral,
 // fiesta patronal, concierto…). Mismo estilo que el de inscripción.
 // No hay precios: cada caso se habla personalmente con quien lo solicita.
-// Todavía no envía nada: al conectar el envío por email (Resend) se hará aquí.
+// Se envía por email al coro con una acción de servidor (Resend).
 
 import { useState } from 'react';
-import { Field, inputClasses } from '../formulario';
+import { Field, inputClasses, CampoTrampa, AceptoPrivacidad, BotonEnviar, type EstadoEnvio } from '../formulario';
+import { enviarContratacion } from '../../acciones/formularios';
 
 export default function FormularioContratacion() {
 
@@ -20,14 +21,16 @@ export default function FormularioContratacion() {
 
   const [mensaje, setMensaje] = useState('');
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false);
-  const [enviado, setEnviado] = useState(false);
+  const [web, setWeb] = useState('');
+  const [estado, setEstado] = useState<EstadoEnvio>('listo');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setEnviado(true);
+    setEstado('enviando');
+    setEstado(await enviarContratacion({ nombre, email, telefono, entidad, fecha, lugar, mensaje, web }));
   };
 
-  if (enviado) {
+  if (estado === 'enviado') {
     return (
       <div className="text-center py-12 animate-[fadeIn_0.6s_ease-out]">
         <div className="flex justify-center mb-8">
@@ -50,7 +53,7 @@ export default function FormularioContratacion() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-10 animate-[fadeIn_0.5s_ease-out]">
+    <form onSubmit={handleSubmit} className="relative space-y-10 animate-[fadeIn_0.5s_ease-out]">
 
       {/* Sin precios: se habla con cada persona */}
       <p className="flex gap-3 text-sm text-stone-600 leading-relaxed bg-red-50/60 border border-red-800/15 rounded-sm p-4">
@@ -111,29 +114,10 @@ export default function FormularioContratacion() {
         <textarea value={mensaje} onChange={(e) => setMensaje(e.target.value)} rows={5} required className={`${inputClasses} resize-none`} />
       </Field>
 
-      <label className="flex items-start gap-3 cursor-pointer group">
-        <input
-          type="checkbox"
-          checked={aceptaPrivacidad}
-          onChange={(e) => setAceptaPrivacidad(e.target.checked)}
-          required
-          className="mt-1 w-4 h-4 accent-red-800 cursor-pointer"
-        />
-        <span className="text-sm text-stone-600 group-hover:text-stone-800 transition-colors">
-          He leído y acepto la política de privacidad. Mis datos se utilizarán únicamente
-          para responder a esta solicitud.
-        </span>
-      </label>
+      <AceptoPrivacidad checked={aceptaPrivacidad} onChange={setAceptaPrivacidad} finalidad="para responder a esta solicitud" />
 
-      <div className="flex justify-center pt-6">
-        <button
-          type="submit"
-          className="group relative overflow-hidden bg-gradient-to-br from-red-800 to-red-950 text-stone-50 px-12 py-4 text-sm tracking-[0.3em] uppercase font-medium shadow-lg hover:shadow-2xl hover:shadow-red-900/60 transition-all duration-300 rounded-sm"
-        >
-          <span className="relative z-10">Enviar solicitud</span>
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-        </button>
-      </div>
+      <CampoTrampa value={web} onChange={setWeb} />
+      <BotonEnviar texto="Enviar solicitud" estado={estado} />
 
     </form>
   );

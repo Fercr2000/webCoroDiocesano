@@ -2,10 +2,11 @@
 
 // Formulario de inscripción (coralista / instrumentista) con su deslizador.
 // Lo usan la sección "Forma parte" del inicio y la página de Contacto.
-// Todavía no envía nada: al conectar el envío por email (Resend) se hará aquí.
+// Se envía por email al coro con una acción de servidor (Resend).
 
 import { useState } from 'react';
-import { Field, Select, inputClasses } from './formulario';
+import { Field, Select, inputClasses, CampoTrampa, AceptoPrivacidad, BotonEnviar, type EstadoEnvio } from './formulario';
+import { enviarInscripcion } from '../acciones/formularios';
 
 type TipoMiembro = 'coralista' | 'instrumentista';
 
@@ -59,15 +60,22 @@ export default function FormularioInscripcion() {
   const [mensaje, setMensaje] = useState('');
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false);
 
-  const [enviado, setEnviado] = useState(false);
+  const [web, setWeb] = useState('');
+  const [estado, setEstado] = useState<EstadoEnvio>('listo');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setEnviado(true);
+    setEstado('enviando');
+    setEstado(await enviarInscripcion({
+      tipo, nombre, apellidos, email, telefono, procedencia,
+      cuerda, experiencia, lectura,
+      instrumento: instrumento === 'Otro' ? otroInstrumento : instrumento,
+      nivel, mensaje, web,
+    }));
   };
 
   // Mensaje de éxito en lugar del formulario
-  if (enviado) {
+  if (estado === 'enviado') {
     return (
       <div className="text-center py-12 animate-[fadeIn_0.6s_ease-out]">
         <div className="flex justify-center mb-8">
@@ -138,7 +146,7 @@ export default function FormularioInscripcion() {
     </div>
 
     {/* FORMULARIO */}
-    <form onSubmit={handleSubmit} className="space-y-10">
+    <form onSubmit={handleSubmit} className="relative space-y-10">
 
       {/* CAMPOS COMUNES */}
       <div className="flex items-center gap-4">
@@ -317,29 +325,10 @@ export default function FormularioInscripcion() {
         />
       </Field>
 
-      <label className="flex items-start gap-3 cursor-pointer group">
-        <input
-          type="checkbox"
-          checked={aceptaPrivacidad}
-          onChange={(e) => setAceptaPrivacidad(e.target.checked)}
-          required
-          className="mt-1 w-4 h-4 accent-red-800 cursor-pointer"
-        />
-        <span className="text-sm text-stone-600 group-hover:text-stone-800 transition-colors">
-          He leído y acepto la política de privacidad. Mis datos se utilizarán únicamente
-          para el proceso de inscripción al Coro de la Diócesis de Jaén.
-        </span>
-      </label>
+      <AceptoPrivacidad checked={aceptaPrivacidad} onChange={setAceptaPrivacidad} finalidad="para el proceso de inscripción al Coro de la Diócesis de Jaén" />
 
-      <div className="flex justify-center pt-6">
-        <button
-          type="submit"
-          className="group relative overflow-hidden bg-gradient-to-br from-red-800 to-red-950 text-stone-50 px-12 py-4 text-sm tracking-[0.3em] uppercase font-medium shadow-lg hover:shadow-2xl hover:shadow-red-900/60 transition-all duration-300 rounded-sm"
-        >
-          <span className="relative z-10">Enviar inscripción</span>
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-        </button>
-      </div>
+      <CampoTrampa value={web} onChange={setWeb} />
+      <BotonEnviar texto="Enviar inscripción" estado={estado} />
 
     </form>
     </>

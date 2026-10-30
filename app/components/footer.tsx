@@ -1,5 +1,6 @@
 // Importamos Image para el logo.
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Importamos los iconos de Lucide.
 import { Mail, MapPin } from 'lucide-react';
@@ -171,9 +172,19 @@ export default function Footer() {
         {/* LÍNEA FINAL */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 text-xs text-stone-400">
 
-          <p>
-            © 2026 Coro de la Diócesis de Jaén. Todos los derechos reservados.
-          </p>
+          <div className="flex flex-col gap-1.5">
+            <p>
+              © 2026 Coro de la Diócesis de Jaén. Todos los derechos reservados.
+            </p>
+            {/* Páginas legales */}
+            <nav aria-label="Información legal" className="flex flex-wrap gap-x-3">
+              <Link href="/aviso-legal" className="hover:text-red-400 transition-colors">Aviso legal</Link>
+              <span className="text-stone-600">·</span>
+              <Link href="/privacidad" className="hover:text-red-400 transition-colors">Privacidad</Link>
+              <span className="text-stone-600">·</span>
+              <Link href="/cookies" className="hover:text-red-400 transition-colors">Cookies</Link>
+            </nav>
+          </div>
 
           <p className="italic">
             Desarrollador:{' '}

@@ -21,6 +21,9 @@ export function proxy(request: NextRequest) {
 
   if (!usuario || !clave) return NextResponse.next();
 
+  // El latido del cron de Vercel tiene su propia clave (CRON_SECRET).
+  if (request.nextUrl.pathname === '/api/latido') return NextResponse.next();
+
   // La cabecera llega como "Basic base64(usuario:clave)".
   const cabecera = request.headers.get('authorization') ?? '';
   if (cabecera.startsWith('Basic ')) {
