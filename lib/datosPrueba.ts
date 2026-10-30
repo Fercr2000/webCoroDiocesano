@@ -137,6 +137,10 @@ export const eventosPrueba: Evento[] = [
   { id: 'e16', tipo: 'celebracion', titulo: 'Solemnidad de la Epifanía', fecha: '2027-01-06', horaInicio: '12:00', horaConvocatoria: '11:15', lugar: CATEDRAL, repertorioId: 'r2', secciones: [], vestimenta: 'Túnica', estado: 'confirmado' },
   { id: 'e17', tipo: 'ensayo', titulo: 'Ensayo semanal', fecha: '2027-01-14', horaInicio: '20:00', horaFin: '21:30', lugar: SEMINARIO, secciones: [], notas: 'Pendiente de nueva fecha.', estado: 'aplazado' },
   { id: 'e18', tipo: 'ensayo', titulo: 'Ensayo semanal', fecha: '2027-01-21', horaInicio: '20:00', horaFin: '21:30', lugar: SEMINARIO, secciones: [], estado: 'confirmado' },
+  { id: 'e20', tipo: 'formacion', titulo: 'Taller de técnica vocal', fecha: '2026-11-07', horaInicio: '10:30', horaFin: '13:30', lugar: SEMINARIO, secciones: ['Voces'], notas: 'Trae ropa cómoda y agua.', estado: 'confirmado' },
+  { id: 'e21', tipo: 'formacion', titulo: 'Formación litúrgica: vivir el Adviento', fecha: '2026-11-28', horaInicio: '11:00', horaFin: '12:30', lugar: SEMINARIO, secciones: [], estado: 'confirmado' },
+  { id: 'e22', tipo: 'convivencia', titulo: 'Convivencia de Adviento', fecha: '2026-12-12', horaInicio: '10:00', horaFin: '17:00', lugar: SEMINARIO, secciones: [], notas: 'Oración, comida compartida y ensayo de villancicos.', estado: 'confirmado' },
+  { id: 'e23', tipo: 'convivencia', titulo: 'Comida de inicio de año', fecha: '2027-01-23', horaInicio: '14:00', lugar: 'Por confirmar', secciones: [], estado: 'confirmado' },
   { id: 'e19', tipo: 'celebracion', titulo: 'Miércoles de Ceniza', fecha: '2027-02-10', horaInicio: '20:00', horaConvocatoria: '19:15', lugar: CATEDRAL, repertorioId: 'r3', secciones: [], vestimenta: 'Túnica', estado: 'confirmado' },
 ];
 

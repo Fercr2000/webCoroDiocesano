@@ -379,7 +379,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 ### Calendario
 
 - **Dos tipos de evento:** *ensayo* y *celebración* (no "actuación": el coro sirve en la liturgia).
-- **De momento SOLO celebraciones, en todas partes** (calendario público, de miembros y panel del Director, que ya no ofrece la opción «Ensayo»). El modelo `Evento` conserva el tipo `'ensayo'` y hay ensayos en los datos de prueba, ocultos. Para reactivarlos: quitar el filtro `e.tipo === 'celebracion'` en `Calendario.tsx` y en `admin/calendario/page.tsx`, y devolver el selector de tipo a `EventoModal.tsx`.
+- **Tipos de evento visibles: Celebración, Formación y Convivencia** (`TIPOS_VISIBLES` en `lib/calendario.ts`), en el calendario público, el de miembros y el panel. Cada tipo tiene su aspecto (celebración destacada con capital y banda granate; formación con banda piedra oscura y birrete; convivencia con velo granate suave y manos) y hay filtros por tipo. El **ensayo** sigue en el modelo pero oculto: para mostrarlo, añadirlo a `TIPOS_VISIBLES`. El cartel granate y la banda del dashboard siguen siendo solo para la próxima **celebración**.
 - **Público vs. miembros:** el público no ve hora de convocatoria, vestimenta, notas ni secciones.
 - **Panel granate "Próxima celebración"** con cuenta atrás (solo celebraciones confirmadas). Título SIN capital. Al pie, como detalle: catedral pequeña (100px) abajo a la derecha de la que sale el pentagrama hacia la izquierda; por él viajan, despacio (48s), notas inclinadas y variadas (4 semicorcheas, corcheas, negras, blanca, silencios). Sin botón "Cómo llegar"; solo "Añadir a mi agenda".
 - **Solo vista Agenda** (agrupada por mes y año). La vista de mes se descartó.

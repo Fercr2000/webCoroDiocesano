@@ -1,10 +1,10 @@
-// Eventos del calendario (ensayos y celebraciones), tal y como se guardarán
-// en la tabla `eventos` de Supabase.
+// Eventos del calendario (celebraciones, formación, convivencias y ensayos),
+// tal y como se guardarán en la tabla `eventos` de Supabase.
 
 import { grupoDeRol, type GrupoRol, type Rol } from './roles';
 import { partesFecha } from './fechas';
 
-export type TipoEvento = 'ensayo' | 'celebracion';
+export type TipoEvento = 'celebracion' | 'formacion' | 'convivencia' | 'ensayo';
 export type EstadoEvento = 'confirmado' | 'aplazado' | 'cancelado';
 
 export interface Evento {
@@ -24,9 +24,23 @@ export interface Evento {
 }
 
 export const ETIQUETA_TIPO: Record<TipoEvento, string> = {
-  ensayo: 'Ensayo',
   celebracion: 'Celebración',
+  formacion: 'Formación',
+  convivencia: 'Convivencia',
+  ensayo: 'Ensayo',
 };
+
+// Plural para los filtros ("Celebraciones", "Formación", "Convivencias").
+export const ETIQUETA_TIPO_PLURAL: Record<TipoEvento, string> = {
+  celebracion: 'Celebraciones',
+  formacion: 'Formación',
+  convivencia: 'Convivencias',
+  ensayo: 'Ensayos',
+};
+
+// Tipos que se muestran en los calendarios y se programan desde el panel.
+// Los ensayos existen en el modelo pero, de momento, no se muestran.
+export const TIPOS_VISIBLES: TipoEvento[] = ['celebracion', 'formacion', 'convivencia'];
 
 export const ETIQUETA_ESTADO: Record<EstadoEvento, string> = {
   confirmado: 'Confirmado',

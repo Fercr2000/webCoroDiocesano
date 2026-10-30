@@ -19,14 +19,21 @@ export default function EventoAdminFila({ evento, pasado, onEditar, onDuplicar, 
 
   const { anio, mes, dia } = partesFecha(evento.fecha);
   const esCelebracion = evento.tipo === 'celebracion';
+  // Bloque de fecha: granate (celebración), piedra oscura (formación), granate suave (convivencia)
+  const bloqueFecha = {
+    celebracion: 'bg-gradient-to-br from-red-800 to-red-950 text-stone-50',
+    formacion: 'bg-stone-800 text-stone-50',
+    convivencia: 'bg-red-50 text-red-900 border-b sm:border-b-0 sm:border-r border-red-800/15',
+    ensayo: 'bg-stone-100 text-stone-700 border-b sm:border-b-0 sm:border-r border-stone-200',
+  }[evento.tipo];
   const cancelado = evento.estado === 'cancelado';
 
   return (
     <li className={`group relative flex flex-col sm:flex-row bg-gradient-to-b from-white to-stone-100 border border-stone-200/80 rounded-sm overflow-hidden shadow-sm shadow-stone-900/5 hover:shadow-lg hover:shadow-red-900/10 hover:border-red-800/30 transition-all duration-300 ${pasado ? 'opacity-60' : ''}`}>
 
-      {/* BLOQUE DE FECHA: granate en celebraciones, piedra en ensayos */}
+      {/* BLOQUE DE FECHA: color según el tipo de evento */}
       <div className={`flex sm:flex-col items-center justify-center gap-3 sm:gap-0 sm:w-24 flex-shrink-0 px-5 py-3 sm:py-5 ${
-        esCelebracion ? 'bg-gradient-to-br from-red-800 to-red-950 text-stone-50' : 'bg-stone-100 text-stone-700 border-b sm:border-b-0 sm:border-r border-stone-200'
+        bloqueFecha
       }`}>
         <span className="text-[10px] tracking-[0.3em] uppercase opacity-80">{DIAS_SEMANA[diaSemana(evento.fecha)].slice(0, 3)}</span>
         <span className="font-serif text-4xl leading-none tabular-nums sm:my-1">{dia}</span>

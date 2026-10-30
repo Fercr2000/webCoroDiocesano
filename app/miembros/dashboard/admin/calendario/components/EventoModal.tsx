@@ -1,7 +1,8 @@
 'use client';
 
-// Modal para crear, editar o duplicar una celebración del calendario.
-// (El modelo admite ensayos, pero de momento no se programan desde aquí.)
+// Modal para crear, editar o duplicar un evento del calendario: celebración,
+// formación o convivencia. (El modelo admite ensayos, pero de momento no se
+// programan desde aquí.)
 // La fecha usa el selector nativo del navegador (input type="date"), que
 // devuelve siempre 'AAAA-MM-DD' y evita errores de día, mes o año al teclear.
 
@@ -9,7 +10,7 @@ import { useState } from 'react';
 import Modal, { BotonPrincipal, BotonSecundario } from '../../../components/Modal';
 import { Field, Select, inputClasses } from '@/app/components/formulario';
 import { nombresGrupos, type GrupoRol } from '@/lib/roles';
-import { ETIQUETA_ESTADO, type Evento, type EstadoEvento } from '@/lib/calendario';
+import { ETIQUETA_ESTADO, ETIQUETA_TIPO, TIPOS_VISIBLES, type Evento, type EstadoEvento, type TipoEvento } from '@/lib/calendario';
 import type { Repertorio } from '@/lib/archivo';
 
 export type DatosEvento = Omit<Evento, 'id'>;
@@ -24,10 +25,17 @@ interface EventoModalProps {
 
 type Errores = Partial<Record<'titulo' | 'fecha' | 'horaInicio' | 'horaFin' | 'horaConvocatoria' | 'lugar', string>>;
 
+const PLACEHOLDER_TITULO: Record<TipoEvento, string> = {
+  celebracion: 'Solemnidad de...',
+  formacion: 'Taller de técnica vocal...',
+  convivencia: 'Convivencia de Adviento...',
+  ensayo: 'Ensayo general...',
+};
+
 const TITULOS = {
-  crear: { eyebrow: 'Nueva celebración', titulo: 'Una nueva cita' },
-  editar: { eyebrow: 'Editar celebración', titulo: '' },
-  duplicar: { eyebrow: 'Duplicar celebración', titulo: 'La misma cita, otro día' },
+  crear: { eyebrow: 'Nuevo evento', titulo: 'Una nueva cita' },
+  editar: { eyebrow: 'Editar evento', titulo: '' },
+  duplicar: { eyebrow: 'Duplicar evento', titulo: 'La misma cita, otro día' },
 };
 
 export default function EventoModal({ modo, inicial, repertorios, onGuardar, onCerrar }: EventoModalProps) {
@@ -43,6 +51,7 @@ export default function EventoModal({ modo, inicial, repertorios, onGuardar, onC
   const [vestimenta, setVestimenta] = useState(inicial?.vestimenta ?? '');
   const [notas, setNotas] = useState(inicial?.notas ?? '');
   const [estado, setEstado] = useState<EstadoEvento>(inicial?.estado ?? 'confirmado');
+  const [tipo, setTipo] = useState<TipoEvento>(inicial && TIPOS_VISIBLES.includes(inicial.tipo) ? inicial.tipo : 'celebracion');
   const [errores, setErrores] = useState<Errores>({});
 
   const alternarSeccion = (grupo: GrupoRol) =>
@@ -67,7 +76,7 @@ export default function EventoModal({ modo, inicial, repertorios, onGuardar, onC
     if (Object.keys(e).length > 0) return;
     // Los campos opcionales vacíos se guardan como "sin valor", no como texto vacío.
     onGuardar({
-      tipo: 'celebracion',
+      tipo,
       titulo: titulo.trim(),
       fecha,
       horaInicio,
@@ -76,7 +85,7 @@ export default function EventoModal({ modo, inicial, repertorios, onGuardar, onC
       lugar: lugar.trim(),
       repertorioId: repertorioId || undefined,
       secciones,
-      vestimenta: vestimenta.trim() || undefined,
+      vestimenta: tipo === 'celebracion' ? vestimenta.trim() || undefined : undefined,
       notas: notas.trim() || undefined,
       estado,
     });
@@ -90,12 +99,33 @@ export default function EventoModal({ modo, inicial, repertorios, onGuardar, onC
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-6">
 
+        {/* TIPO: deslizador cápsula de tres posiciones */}
+        <div className="relative grid grid-cols-3 border border-stone-300 rounded-full overflow-hidden bg-stone-100">
+          <div
+            className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-br from-red-800 to-red-950 transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(${TIPOS_VISIBLES.indexOf(tipo) * 100}%)` }}
+          />
+          {TIPOS_VISIBLES.map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTipo(t)}
+              aria-pressed={tipo === t}
+              className={`relative z-10 py-3 text-[10px] sm:text-xs tracking-[0.15em] sm:tracking-[0.25em] uppercase font-medium transition-colors duration-300 ${
+                tipo === t ? 'text-stone-50' : 'text-stone-500 hover:text-stone-800'
+              }`}
+            >
+              {ETIQUETA_TIPO[t]}
+            </button>
+          ))}
+        </div>
+
         <Field label="Título" required error={errores.titulo}>
           <input
             type="text"
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
-            placeholder="Solemnidad de..."
+            placeholder={PLACEHOLDER_TITULO[tipo]}
             autoFocus
             className={inputClasses}
           />
@@ -150,15 +180,17 @@ export default function EventoModal({ modo, inicial, repertorios, onGuardar, onC
           </Select>
         </Field>
 
-        <Field label="Vestimenta" hint="Opcional">
-          <input
-            type="text"
-            value={vestimenta}
-            onChange={(e) => setVestimenta(e.target.value)}
-            placeholder="Túnica, negro..."
-            className={inputClasses}
-          />
-        </Field>
+        {tipo === 'celebracion' && (
+          <Field label="Vestimenta" hint="Opcional">
+            <input
+              type="text"
+              value={vestimenta}
+              onChange={(e) => setVestimenta(e.target.value)}
+              placeholder="Túnica, negro..."
+              className={inputClasses}
+            />
+          </Field>
+        )}
 
         <Field label="Notas" hint="Opcional · solo las ven los miembros">
           <textarea
@@ -179,7 +211,7 @@ export default function EventoModal({ modo, inicial, repertorios, onGuardar, onC
 
         <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4">
           <BotonSecundario type="button" onClick={onCerrar}>Cancelar</BotonSecundario>
-          <BotonPrincipal type="submit">{modo === 'editar' ? 'Guardar cambios' : 'Crear celebración'}</BotonPrincipal>
+          <BotonPrincipal type="submit">{modo === 'editar' ? 'Guardar cambios' : 'Crear evento'}</BotonPrincipal>
         </div>
 
       </form>

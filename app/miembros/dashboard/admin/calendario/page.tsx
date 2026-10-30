@@ -11,7 +11,7 @@ import BandaProximaCelebracion from '@/app/components/calendario/BandaProximaCel
 import FondoNotas from '@/app/components/FondoNotas';
 import { useHoy } from '@/app/components/calendario/useHoy';
 import { MESES, partesFecha, sumarDias, fechaLarga } from '@/lib/fechas';
-import { ordenarEventos, type Evento } from '@/lib/calendario';
+import { ordenarEventos, ETIQUETA_TIPO_PLURAL, TIPOS_VISIBLES, type Evento, type TipoEvento } from '@/lib/calendario';
 import { eventosPrueba, repertoriosPrueba } from '@/lib/datosPrueba';
 
 // ============= DATOS DE PRUEBA =============
@@ -38,6 +38,7 @@ export default function CalendarioAdminPage() {
 
   const [eventos, setEventos] = useState<Evento[]>(eventosPrueba);
   const [verPasados, setVerPasados] = useState(false);
+  const [filtro, setFiltro] = useState<'todos' | TipoEvento>('todos');
   const [dialogo, setDialogo] = useState<Dialogo>(null);
 
   const cerrarDialogo = () => setDialogo(null);
@@ -61,9 +62,9 @@ export default function CalendarioAdminPage() {
 
   // ============= LISTADOS =============
 
-  // De momento solo se programan celebraciones (los ensayos de prueba quedan ocultos).
+  // Celebraciones, formación y convivencias (los ensayos de prueba quedan ocultos).
   const filtrados = eventos
-    .filter((e) => e.tipo === 'celebracion')
+    .filter((e) => TIPOS_VISIBLES.includes(e.tipo) && (filtro === 'todos' || e.tipo === filtro))
     .sort(ordenarEventos);
   const proximos = hoy ? filtrados.filter((e) => e.fecha >= hoy) : filtrados;
   const pasados = hoy ? filtrados.filter((e) => e.fecha < hoy).reverse() : [];
@@ -126,7 +127,7 @@ export default function CalendarioAdminPage() {
           </h1>
 
           <p className="font-serif italic text-lg md:text-xl text-stone-500 text-center mb-6">
-            Las celebraciones del curso
+            Celebraciones, formación y convivencias del curso
           </p>
 
           <div className="flex justify-center mb-10">
@@ -140,8 +141,29 @@ export default function CalendarioAdminPage() {
           {/* Banda granate: así queda la próxima celebración para todos */}
           <BandaProximaCelebracion eventos={eventos} href="/miembros/dashboard/calendario" textoEnlace="Ver como miembro" />
 
-          {/* ============= NUEVO EVENTO ============= */}
-          <div className="flex justify-end mb-8">
+          {/* ============= FILTROS + NUEVO EVENTO ============= */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div className="flex flex-wrap gap-2">
+              {(['todos', ...TIPOS_VISIBLES] as const).map((f) => {
+                const activo = filtro === f;
+                return (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setFiltro(f)}
+                    aria-pressed={activo}
+                    className={`px-5 py-2 text-xs tracking-[0.2em] uppercase font-medium rounded-full transition-all duration-300 ${
+                      activo
+                        ? 'bg-gradient-to-br from-red-800 to-red-950 text-stone-50 shadow-md shadow-red-900/30'
+                        : 'bg-stone-100 text-stone-600 border border-stone-300 hover:border-red-800/60 hover:text-red-800'
+                    }`}
+                  >
+                    {f === 'todos' ? 'Todos' : ETIQUETA_TIPO_PLURAL[f]}
+                  </button>
+                );
+              })}
+            </div>
+
             <button
               type="button"
               onClick={() => setDialogo({ tipo: 'crear' })}
@@ -149,7 +171,7 @@ export default function CalendarioAdminPage() {
             >
               <span className="relative z-10 flex items-center gap-2">
                 <CalendarPlus size={16} strokeWidth={1.5} />
-                Nueva celebración
+                Nuevo evento
               </span>
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             </button>
@@ -159,7 +181,7 @@ export default function CalendarioAdminPage() {
           {grupos.length === 0 ? (
             <div className="text-center py-16">
               <p className="font-serif italic text-xl text-stone-500 mb-2">No hay nada programado</p>
-              <p className="text-sm text-stone-400">Usa «Nueva celebración» para añadir la próxima.</p>
+              <p className="text-sm text-stone-400">Usa «Nuevo evento» para añadir el próximo.</p>
             </div>
           ) : (
             <div className="space-y-8">

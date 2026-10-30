@@ -1,10 +1,10 @@
 'use client';
 
-// Calendario de celebraciones: cartel de la próxima, agenda agrupada por
-// mes y celebraciones pasadas. Lo usan la página pública (sin datos
-// internos) y el área de miembros (con convocatoria, vestimenta y enlace al
-// repertorio). Los ensayos se gestionan en el panel pero, de momento, no se
-// muestran aquí.
+// Calendario: cartel de la próxima celebración, filtros por tipo
+// (celebraciones, formación, convivencias), agenda agrupada por mes y eventos
+// pasados. Lo usan la página pública (sin datos internos) y el área de
+// miembros (con convocatoria, vestimenta y enlace al repertorio). Los ensayos
+// existen en el modelo pero, de momento, no se muestran.
 
 import { useState, useMemo } from 'react';
 import { ChevronDown } from 'lucide-react';
@@ -12,7 +12,7 @@ import CartelProximaCelebracion from './CartelProximaCelebracion';
 import EventoAgenda from './EventoAgenda';
 import { useHoy } from './useHoy';
 import { MESES, partesFecha } from '@/lib/fechas';
-import { estaConvocado, ordenarEventos, type Evento } from '@/lib/calendario';
+import { estaConvocado, ordenarEventos, ETIQUETA_TIPO_PLURAL, TIPOS_VISIBLES, type Evento, type TipoEvento } from '@/lib/calendario';
 import type { Repertorio } from '@/lib/archivo';
 import type { Rol } from '@/lib/roles';
 
@@ -28,11 +28,13 @@ export default function Calendario({ eventos, modo, rol, repertorios = [] }: Cal
   const hoy = useHoy();
   const internos = modo === 'miembros';
   const [verPasados, setVerPasados] = useState(false);
+  const [filtro, setFiltro] = useState<'todo' | TipoEvento>('todo');
 
-  const visibles = useMemo(
-    () => eventos.filter((e) => e.tipo === 'celebracion').sort(ordenarEventos),
+  const deTiposVisibles = useMemo(
+    () => eventos.filter((e) => TIPOS_VISIBLES.includes(e.tipo)).sort(ordenarEventos),
     [eventos]
   );
+  const visibles = filtro === 'todo' ? deTiposVisibles : deTiposVisibles.filter((e) => e.tipo === filtro);
 
   // Mientras no sabemos la fecha (render del servidor) se muestra un aviso breve.
   if (!hoy) {
@@ -43,7 +45,9 @@ export default function Calendario({ eventos, modo, rol, repertorios = [] }: Cal
   const pasados = visibles.filter((e) => e.fecha < hoy).reverse();
 
   // El cartel: siempre la próxima celebración confirmada (las aplazadas o canceladas no cuentan).
-  const proximaCelebracion = visibles.find((e) => e.estado === 'confirmado' && e.fecha >= hoy);
+  const proximaCelebracion = deTiposVisibles.find((e) => e.tipo === 'celebracion' && e.estado === 'confirmado' && e.fecha >= hoy);
+  const cuenta = (f: 'todo' | TipoEvento) =>
+    deTiposVisibles.filter((e) => e.fecha >= hoy && (f === 'todo' || e.tipo === f)).length;
 
   const nombreRepertorio = (id?: string) => repertorios.find((r) => r.id === id)?.nombre;
 
@@ -64,10 +68,38 @@ export default function Calendario({ eventos, modo, rol, repertorios = [] }: Cal
       {/* ============= CARTEL GRANATE ============= */}
       <CartelProximaCelebracion evento={proximaCelebracion} hoy={hoy} detallesInternos={internos} />
 
+      {/* ============= FILTROS POR TIPO ============= */}
+      <div className="flex flex-wrap justify-center gap-2 mt-12">
+        {(['todo', ...TIPOS_VISIBLES] as const).map((f) => {
+          const activo = filtro === f;
+          return (
+            <button
+              key={f}
+              type="button"
+              onClick={() => setFiltro(f)}
+              aria-pressed={activo}
+              className={`group relative overflow-hidden px-5 py-2 text-xs tracking-[0.2em] uppercase font-medium rounded-full transition-all duration-300 ${
+                activo
+                  ? 'bg-gradient-to-br from-red-800 to-red-950 text-stone-50 shadow-md shadow-red-900/30'
+                  : 'bg-stone-100 text-stone-600 border border-stone-300 hover:border-red-800/60 hover:text-red-800'
+              }`}
+            >
+              <span className="relative z-10">
+                {f === 'todo' ? 'Todo' : ETIQUETA_TIPO_PLURAL[f]}
+                <span className={`ml-2 ${activo ? 'text-stone-50/70' : 'text-stone-400'}`}>{cuenta(f)}</span>
+              </span>
+              {activo && (
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
       {/* ============= AGENDA ============= */}
-      <div className="mt-12">
+      <div key={filtro} className="mt-10 animate-[fadeIn_0.4s_ease-out]">
         {proximos.length === 0 ? (
-          <p className="text-center font-serif italic text-xl text-stone-500 py-8">No hay celebraciones anunciadas por ahora.</p>
+          <p className="text-center font-serif italic text-xl text-stone-500 py-8">No hay nada anunciado por ahora.</p>
         ) : (
           <div className="space-y-10">
             {agruparPorMes(proximos).map(({ anio, mes, eventos }) => (
@@ -91,7 +123,7 @@ export default function Calendario({ eventos, modo, rol, repertorios = [] }: Cal
           >
             <div className="h-px flex-1 bg-stone-300" />
             <span className="flex items-center gap-2 text-[10px] tracking-[0.4em] uppercase font-medium">
-              Celebraciones pasadas ({pasados.length})
+              {filtro === 'todo' ? 'Eventos pasados' : `${ETIQUETA_TIPO_PLURAL[filtro]} · pasados`} ({pasados.length})
               <ChevronDown size={14} strokeWidth={1.5} className={`transition-transform duration-300 ${verPasados ? 'rotate-180' : ''}`} />
             </span>
             <div className="h-px flex-1 bg-stone-300" />
