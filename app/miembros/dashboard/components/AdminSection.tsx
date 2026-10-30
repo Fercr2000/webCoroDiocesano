@@ -1,55 +1,88 @@
-// Bloque de administración que solo ve el Director, encima de su archivo.
-// Cada tarjeta lleva a una sub-página del panel.
+// Bloque de administración del dashboard. Cada tarjeta pertenece a un rol de
+// gestión (lib/gestion.ts) y solo se muestra a quien lo tiene; el Director,
+// que los tiene todos, las ve todas.
 
 import Link from 'next/link';
-import { Users, Theater, BookOpen, FileMusic, ListMusic, CalendarDays, ArrowRight } from 'lucide-react';
+import { Users, Theater, BookOpen, FileMusic, ListMusic, CalendarDays, LayoutTemplate, ScrollText, Images, Phone, ArrowRight } from 'lucide-react';
+import { ROLES_GESTION, type RolGestion } from '@/lib/gestion';
 
-const secciones = [
+const secciones: { rol: RolGestion; href: string; icono: typeof Users; titulo: string; descripcion: string }[] = [
   {
-    href: '/miembros/dashboard/admin/usuarios',
-    icono: Users,
-    eyebrow: 'Quién entra',
-    titulo: 'Usuarios',
-    descripcion: 'Da de alta a coralistas e instrumentistas y gestiona sus accesos.',
+    rol: 'portada',
+    href: '/miembros/dashboard/admin/portada',
+    icono: LayoutTemplate,
+    titulo: 'Portada e inicio',
+    descripcion: 'Imágenes y textos del hero, textos del inicio y palabras del Obispo.',
   },
   {
+    rol: 'sobre-nosotros',
+    href: '/miembros/dashboard/admin/sobre-nosotros',
+    icono: ScrollText,
+    titulo: 'Textos y responsables',
+    descripcion: 'Textos de Sobre nosotros, responsables y sus cartas.',
+  },
+  {
+    rol: 'sobre-nosotros',
     href: '/miembros/dashboard/admin/componentes',
     icono: Theater,
-    eyebrow: 'Quién se presenta',
     titulo: 'Componentes',
     descripcion: 'Elige quién aparece en la formación de la página pública.',
   },
   {
+    rol: 'galeria',
+    href: '/miembros/dashboard/admin/galeria',
+    icono: Images,
+    titulo: 'Galería',
+    descripcion: 'Crea álbumes y sube las fotos de cada celebración.',
+  },
+  {
+    rol: 'agenda',
+    href: '/miembros/dashboard/admin/calendario',
+    icono: CalendarDays,
+    titulo: 'Calendario',
+    descripcion: 'Programa las celebraciones y convoca a cada sección.',
+  },
+  {
+    rol: 'musica',
     href: '/miembros/dashboard/admin/catalogo',
     icono: BookOpen,
-    eyebrow: 'Qué tenemos montado',
     titulo: 'Catálogo',
     descripcion: 'Mantén las obras que el público ve en «Repertorio».',
   },
   {
-    href: '/miembros/dashboard/admin/archivos',
-    icono: FileMusic,
-    eyebrow: 'Qué estudian',
-    titulo: 'Archivos',
-    descripcion: 'Sube partituras y audios y asígnalos a cada cuerda.',
-  },
-  {
+    rol: 'musica',
     href: '/miembros/dashboard/admin/repertorios',
     icono: ListMusic,
-    eyebrow: 'Cómo se ordena',
     titulo: 'Repertorios',
     descripcion: 'Organiza las obras por tiempos litúrgicos y celebraciones.',
   },
   {
-    href: '/miembros/dashboard/admin/calendario',
-    icono: CalendarDays,
-    eyebrow: 'Cuándo servimos',
-    titulo: 'Calendario',
-    descripcion: 'Programa las celebraciones y convoca a cada sección.',
+    rol: 'musica',
+    href: '/miembros/dashboard/admin/archivos',
+    icono: FileMusic,
+    titulo: 'Archivos',
+    descripcion: 'Sube partituras y audios y asígnalos a cada cuerda.',
+  },
+  {
+    rol: 'secretaria',
+    href: '/miembros/dashboard/admin/usuarios',
+    icono: Users,
+    titulo: 'Usuarios',
+    descripcion: 'Da de alta a los miembros, gestiona sus accesos y sus roles.',
+  },
+  {
+    rol: 'secretaria',
+    href: '/miembros/dashboard/admin/contacto',
+    icono: Phone,
+    titulo: 'Contacto',
+    descripcion: 'Teléfonos, email y datos que aparecen en la web.',
   },
 ];
 
-export default function AdminSection() {
+export default function AdminSection({ roles, esDirector }: { roles: RolGestion[]; esDirector: boolean }) {
+
+  const visibles = secciones.filter((s) => roles.includes(s.rol));
+
   return (
     <section className="mb-20 md:mb-24">
 
@@ -63,16 +96,18 @@ export default function AdminSection() {
       </div>
 
       <h2 className="font-serif text-4xl md:text-5xl text-stone-900 text-center tracking-tight leading-[1.1] mb-4">
-        Tu coro, en orden
+        {esDirector ? 'Tu coro, en orden' : 'Lo que gestionas'}
       </h2>
 
       <p className="font-serif italic text-lg text-stone-500 text-center mb-12">
-        Lo que solo la dirección puede tocar
+        {esDirector
+          ? 'Tienes todos los roles de gestión y decides quién gestiona cada parte'
+          : `Tus roles: ${roles.map((r) => ROLES_GESTION[r].nombre).join(' · ')}`}
       </p>
 
       {/* TARJETAS */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {secciones.map(({ href, icono: Icono, eyebrow, titulo, descripcion }) => (
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        {visibles.map(({ rol, href, icono: Icono, titulo, descripcion }) => (
           <Link
             key={href}
             href={href}
@@ -89,7 +124,7 @@ export default function AdminSection() {
             </div>
 
             <span className="text-[10px] tracking-[0.3em] uppercase text-red-800/80 font-medium mb-2">
-              {eyebrow}
+              {ROLES_GESTION[rol].nombre}
             </span>
 
             <h3 className="font-serif text-2xl text-stone-900 tracking-tight leading-tight mb-2">

@@ -1,17 +1,17 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import FondoNotas from './FondoNotas';
 
-// Inicio: anticipo de la carta del director (cita, primer párrafo y firma).
-// La carta completa está en /sobre-nosotros/director.
+// Inicio: palabras de nuestro Obispo, Mons. Sebastián Chico Martínez, con la
+// misma composición que tenía la carta del director (foto enmarcada, cita,
+// párrafo con capital y firma). Textos de prueba (lorem ipsum) y marcador en
+// lugar de foto hasta tener los definitivos. Las palabras del Director están
+// en Sobre nosotros (/sobre-nosotros/director).
 
-export default function Director() {
+export default function PalabrasObispo() {
 
   return (
 
     <section
-      id="director"
+      id="obispo"
       className="superficie-clara w-full py-16 md:py-24 overflow-hidden"
     >
 
@@ -26,14 +26,14 @@ export default function Director() {
         <div className="flex items-center justify-center gap-4 mb-6">
           <div className="h-px w-16 bg-red-800/60" />
           <span className="text-xs tracking-[0.4em] uppercase text-red-800 font-medium">
-            Carta del director
+            Carta del Obispo
           </span>
           <div className="h-px w-16 bg-red-800/60" />
         </div>
 
         {/* TITULAR */}
         <h2 className="font-serif text-5xl md:text-7xl text-stone-900 text-center tracking-tight leading-[1.1] mb-3">
-          Palabras del director
+          Palabras de nuestro Obispo
         </h2>
 
         <p className="font-serif italic text-xl md:text-2xl text-stone-500 text-center mb-6">
@@ -64,21 +64,13 @@ export default function Director() {
             {/* Marco exterior fino */}
             <div className="absolute -inset-4 border border-red-800/15 pointer-events-none" />
 
-            {/* Foto con sombra granate */}
-            <div className="relative h-full w-full overflow-hidden shadow-2xl shadow-red-950/30">
-
-              <Image
-                src="/FotoDirectrorPalabras.jpg"
-                alt="Fernando J. Camacho Rizquez, Director del Coro de la Diócesis de Jaén"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-              />
-
-              {/* Sombreado suave */}
-              <div className="absolute inset-0 bg-gradient-to-t from-red-950/20 via-transparent to-transparent pointer-events-none" />
-
+            {/* Marcador hasta tener la foto: la inicial en serif, con sombra granate */}
+            <div className="relative h-full w-full overflow-hidden shadow-2xl shadow-red-950/30 flex flex-col items-center justify-center bg-gradient-to-br from-stone-100 to-stone-200">
+              <span className="font-serif text-9xl text-red-800/70 leading-none">S</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" className="mt-6 text-red-800/50" aria-hidden="true">
+                <rect x="3" y="3" width="8" height="8" transform="rotate(45 7 7)" fill="currentColor" />
+              </svg>
+              <span className="mt-4 text-[10px] tracking-[0.4em] uppercase text-stone-400">Foto pendiente</span>
             </div>
 
           </div>
@@ -94,17 +86,17 @@ export default function Director() {
               «
             </div>
 
-            {/* Cita del Salmo */}
+            {/* Cita (de prueba) */}
             <blockquote className="relative z-10 font-serif italic text-xl md:text-2xl text-red-900 leading-relaxed border-l-2 border-red-800/60 pl-6">
-              «Cantadle un cántico nuevo, tocad con maestría, aclamad.»
+              «Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.»
               <cite className="block not-italic text-xs tracking-[0.3em] uppercase text-red-800/70 mt-3 font-sans">
-                Salmo 33, 3
+                Texto de prueba
               </cite>
             </blockquote>
 
             {/* Primer párrafo con letra capital */}
             <p className="relative z-10 font-serif text-lg md:text-xl leading-relaxed text-stone-700 first-letter:font-serif first-letter:text-6xl first-letter:font-medium first-letter:text-red-900 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
-              En medio de tanto ruido, la música sacra sigue siendo uno de los pocos lugares donde el silencio tiene sentido. Donde una voz humana, sin amplificar, todavía puede conmover. Donde la belleza no se vende: se ofrece. Por eso seguimos cantándola — porque cada época la necesita a su manera, y la nuestra quizá más que ninguna.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus, posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla. Cras mattis consectetur purus sit amet fermentum, vestibulum id ligula porta felis euismod semper. Nullam quis risus eget urna mollis ornare vel eu leo.
             </p>
 
             {/* FIRMA */}
@@ -112,22 +104,13 @@ export default function Director() {
               <div className="h-px w-12 bg-red-800/60 flex-shrink-0" />
               <div>
                 <p className="font-serif italic text-2xl text-stone-900">
-                  Fernando J. Camacho Rizquez
+                  Mons. Sebastián Chico Martínez
                 </p>
                 <p className="text-xs tracking-[0.3em] uppercase text-red-800/80 mt-2">
-                  Director del Coro de la Diócesis de Jaén
+                  Obispo de Jaén
                 </p>
               </div>
             </div>
-
-            {/* Carta completa */}
-            <Link
-              href="/sobre-nosotros/director"
-              className="relative z-10 group inline-flex items-center gap-2 self-start text-xs tracking-[0.3em] uppercase font-medium text-stone-600 hover:text-red-800 border-b border-stone-300 hover:border-red-800 pb-1 transition-colors"
-            >
-              Leer la carta completa
-              <ArrowRight size={14} strokeWidth={1.5} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
 
           </div>
 

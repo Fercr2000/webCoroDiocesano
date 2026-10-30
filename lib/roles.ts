@@ -1,3 +1,5 @@
+import type { RolGestion } from './gestion';
+
 // Roles del coro y la orquesta, agrupados por sección.
 // Es la única fuente de verdad: la usan la gestión de usuarios y, más
 // adelante, la subida de archivos (cada partitura pertenece a un rol).
@@ -21,11 +23,13 @@ export function grupoDeRol(rol: Rol): GrupoRol {
 
 // Miembro del coro tal y como se guardará en la tabla `usuarios` de Supabase.
 // La contraseña nunca forma parte de él: la gestiona Supabase Auth.
+// `gestion`: roles de gestión de la web (ver lib/gestion.ts); vacío = solo miembro.
 export interface Usuario {
   id: string;
   nombre: string;
   email: string;
   rol: Rol;
+  gestion: RolGestion[];
 }
 
 // Contraseña inicial fácil de dictar y copiar: tres bloques de 4 caracteres

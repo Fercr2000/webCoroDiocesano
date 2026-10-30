@@ -9,6 +9,7 @@ import CreateUserModal, { type DatosUsuario } from './components/CreateUserModal
 import ConfirmDialog from '../../components/ConfirmDialog';
 import PasswordDialog from './components/PasswordDialog';
 import { grupoDeRol, nombresGrupos, generarContrasena, type GrupoRol, type Usuario } from '@/lib/roles';
+import { puedeAsignarRoles } from '@/lib/gestion';
 import { usuariosPrueba } from '@/lib/datosPrueba';
 
 // ============= DATOS DE PRUEBA =============
@@ -74,8 +75,8 @@ export default function UsuariosPage() {
     setDialogo({ tipo: 'contrasena', usuario: nuevo, contrasena, motivo: 'creado' });
   };
 
-  const editarUsuario = (id: string, { nombre, email, rol }: DatosUsuario) => {
-    setUsuarios((prev) => prev.map((u) => (u.id === id ? { ...u, nombre, email, rol } : u)));
+  const editarUsuario = (id: string, { nombre, email, rol, gestion }: DatosUsuario) => {
+    setUsuarios((prev) => prev.map((u) => (u.id === id ? { ...u, nombre, email, rol, gestion } : u)));
     cerrarDialogo();
   };
 
@@ -261,6 +262,7 @@ export default function UsuariosPage() {
       {dialogo?.tipo === 'crear' && (
         <CreateUserModal
           emailsOcupados={emailsOcupados()}
+          puedeAsignarRoles={puedeAsignarRoles(directorPrueba)}
           onGuardar={crearUsuario}
           onCerrar={cerrarDialogo}
         />
@@ -270,6 +272,7 @@ export default function UsuariosPage() {
         <CreateUserModal
           usuario={dialogo.usuario}
           emailsOcupados={emailsOcupados(dialogo.usuario)}
+          puedeAsignarRoles={puedeAsignarRoles(directorPrueba)}
           onGuardar={(datos) => editarUsuario(dialogo.usuario.id, datos)}
           onCerrar={cerrarDialogo}
         />

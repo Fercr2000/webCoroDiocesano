@@ -1,6 +1,6 @@
 import Hero from "../components/hero";
 import About from "../components/about";
-import Director from "../components/palabrasDirector";
+import PalabrasObispo from "../components/palabrasObispo";
 import Reveal from "../components/Reveal";
 import FondoNotas from "../components/FondoNotas";
 import ProximaCelebracionInicio from "../components/inicio/ProximaCelebracionInicio";
@@ -9,7 +9,7 @@ import FormaParte from "../components/inicio/FormaParte";
 import { eventosPrueba } from "@/lib/datosPrueba";
 
 // Inicio: una puerta a toda la web. Hero → próxima celebración (cartel con la
-// catedral y el pentagrama) → quiénes somos → palabras del director → forma
+// catedral y el pentagrama) → quiénes somos → palabras del Obispo → forma
 // parte (lleva a Contacto con la opción elegida) → descubre (tarjetas con fotos
 // de las secciones), al final por decisión de Fernando.
 export default function Home() {
@@ -32,7 +32,7 @@ export default function Home() {
       </Reveal>
 
       <Reveal>
-        <Director />
+        <PalabrasObispo />
       </Reveal>
 
       <FormaParte />

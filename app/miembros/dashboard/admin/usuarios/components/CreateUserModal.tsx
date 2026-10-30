@@ -3,36 +3,41 @@
 // Modal para crear un miembro nuevo o editar uno existente (si recibe `usuario`).
 // Al crear pide también la contraseña inicial; al editar no, porque eso
 // se hace con "Restablecer contraseña" desde la tarjeta.
+// Los roles de gestión solo aparecen si quien edita puede asignarlos (el Director).
 
 import { useState } from 'react';
-import { Wand2 } from 'lucide-react';
+import { Wand2, Check, ShieldCheck } from 'lucide-react';
 import Modal, { BotonPrincipal, BotonSecundario } from '../../../components/Modal';
 import { Field, Select, inputClasses } from '@/app/components/formulario';
 import { gruposRoles, nombresGrupos, generarContrasena, type Rol, type Usuario } from '@/lib/roles';
+import { ROLES_GESTION, TODOS_LOS_ROLES, type RolGestion } from '@/lib/gestion';
 
 export interface DatosUsuario {
   nombre: string;
   email: string;
   rol: Rol;
+  gestion: RolGestion[];
   contrasena: string;
 }
 
 interface CreateUserModalProps {
   usuario?: Usuario;
   emailsOcupados: string[];
+  puedeAsignarRoles: boolean;
   onGuardar: (datos: DatosUsuario) => void;
   onCerrar: () => void;
 }
 
 type Errores = Partial<Record<keyof DatosUsuario, string>>;
 
-export default function CreateUserModal({ usuario, emailsOcupados, onGuardar, onCerrar }: CreateUserModalProps) {
+export default function CreateUserModal({ usuario, emailsOcupados, puedeAsignarRoles, onGuardar, onCerrar }: CreateUserModalProps) {
 
   const editando = usuario !== undefined;
 
   const [nombre, setNombre] = useState(usuario?.nombre ?? '');
   const [email, setEmail] = useState(usuario?.email ?? '');
   const [rol, setRol] = useState<Rol | ''>(usuario?.rol ?? '');
+  const [gestion, setGestion] = useState<RolGestion[]>(usuario?.gestion ?? []);
   const [contrasena, setContrasena] = useState('');
   const [errores, setErrores] = useState<Errores>({});
 
@@ -52,7 +57,8 @@ export default function CreateUserModal({ usuario, emailsOcupados, onGuardar, on
     const e = validar();
     setErrores(e);
     if (Object.keys(e).length > 0 || !rol) return;
-    onGuardar({ nombre: nombre.trim(), email: email.trim().toLowerCase(), rol, contrasena });
+    // El Director no guarda roles: los tiene todos siempre.
+    onGuardar({ nombre: nombre.trim(), email: email.trim().toLowerCase(), rol, gestion: rol === 'Director' ? [] : gestion, contrasena });
   };
 
   return (
@@ -94,6 +100,50 @@ export default function CreateUserModal({ usuario, emailsOcupados, onGuardar, on
             ))}
           </Select>
         </Field>
+
+        {/* ROLES DE GESTIÓN (solo los ve y cambia el Director) */}
+        {puedeAsignarRoles && (
+          <div>
+            <div className="flex items-baseline justify-between mb-3">
+              <span className="text-xs tracking-[0.2em] uppercase text-stone-700 font-medium">Roles de gestión</span>
+              <span className="text-xs text-stone-400 italic">Qué partes de la web puede editar</span>
+            </div>
+            {rol === 'Director' ? (
+              <p className="flex gap-3 text-sm text-stone-600 bg-red-50/60 border border-red-800/15 rounded-sm p-4">
+                <ShieldCheck size={18} strokeWidth={1.5} className="flex-shrink-0 text-red-800" />
+                El Director tiene siempre todos los roles y es quien los reparte.
+              </p>
+            ) : (
+              <div className="grid sm:grid-cols-2 gap-2">
+                {TODOS_LOS_ROLES.map((r) => {
+                  const activo = gestion.includes(r);
+                  return (
+                    <button
+                      key={r}
+                      type="button"
+                      role="checkbox"
+                      aria-checked={activo}
+                      onClick={() => setGestion((g) => (activo ? g.filter((x) => x !== r) : [...g, r]))}
+                      className={`flex items-start gap-3 text-left rounded-sm border p-3 transition-colors ${
+                        activo ? 'border-red-800 bg-red-50/70' : 'border-stone-200 bg-white hover:border-red-800/40'
+                      }`}
+                    >
+                      <span className={`flex-shrink-0 mt-0.5 w-5 h-5 flex items-center justify-center rounded-sm border transition-colors ${
+                        activo ? 'bg-gradient-to-br from-red-800 to-red-950 border-red-900 text-stone-50' : 'border-stone-300'
+                      }`}>
+                        {activo && <Check size={13} strokeWidth={2.5} />}
+                      </span>
+                      <span>
+                        <span className={`block text-xs tracking-[0.15em] uppercase font-medium ${activo ? 'text-red-800' : 'text-stone-800'}`}>{ROLES_GESTION[r].nombre}</span>
+                        <span className="block text-xs text-stone-500 mt-0.5 leading-snug">{ROLES_GESTION[r].descripcion}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
 
         {!editando && (
           <Field label="Contraseña inicial" required hint="Se la entregarás tú" error={errores.contrasena}>

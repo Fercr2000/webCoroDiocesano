@@ -1,7 +1,8 @@
 'use client';
 
-import { Mail, Pencil, KeyRound, Trash2 } from 'lucide-react';
+import { Mail, Pencil, KeyRound, Trash2, ShieldCheck } from 'lucide-react';
 import { grupoDeRol, type Usuario } from '@/lib/roles';
+import { ROLES_GESTION, rolesEfectivos } from '@/lib/gestion';
 
 interface UserCardProps {
   usuario: Usuario;
@@ -52,6 +53,22 @@ export default function UserCard({ usuario, esTuCuenta, onEditar, onRestablecer,
           <span className="inline-block mt-4 px-3 py-1 text-[10px] tracking-[0.3em] uppercase text-red-800 border border-red-800/30 rounded-full">
             Tu cuenta
           </span>
+        )}
+
+        {/* Roles de gestión (el Director los tiene todos) */}
+        {rolesEfectivos(usuario).length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 mt-4">
+            <ShieldCheck size={13} strokeWidth={1.5} className="text-red-800/70" aria-label="Roles de gestión" />
+            {usuario.rol === 'Director' ? (
+              <span className="px-2 py-0.5 text-[9px] tracking-[0.2em] uppercase text-stone-50 bg-gradient-to-br from-red-800 to-red-950 rounded-full">Todos los roles</span>
+            ) : (
+              rolesEfectivos(usuario).map((r) => (
+                <span key={r} className="px-2 py-0.5 text-[9px] tracking-[0.2em] uppercase text-red-800 bg-red-50/70 border border-red-800/25 rounded-full">
+                  {ROLES_GESTION[r].nombre}
+                </span>
+              ))
+            )}
+          </div>
         )}
       </div>
 

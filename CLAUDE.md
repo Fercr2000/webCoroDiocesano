@@ -46,6 +46,7 @@ lib/
 ├── calendario.ts                    ← tipo Evento, convocatorias por sección y exportación .ics
 ├── responsables.ts                  ← responsables: cargo, nombre, cita, resumen y carta completa
 ├── catalogo.ts                      ← obras del catálogo público: tipos, épocas, formaciones, idiomas y agrupar()
+├── gestion.ts                       ← roles de gestión, rolesEfectivos(), puedeGestionar(), puedeAsignarRoles()
 ├── galeria.ts                       ← álbumes y fotos de la galería: categorías, proporciones
 └── contacto.ts                      ← teléfonos (de muestra), email, Instagram y sede
 
@@ -59,7 +60,7 @@ app/
 │   ├── footer.tsx                   ← footer en tinta cálida, iconos rojos
 │   ├── hero.tsx                     ← slider de 2 slides con Ken Burns, viñeta y chevron
 │   ├── about.tsx                    ← sección "Quiénes somos"
-│   ├── palabrasDirector.tsx         ← carta del director con foto y capitular
+│   ├── palabrasObispo.tsx           ← inicio: palabras del Obispo (antes, del director; las del director están en /sobre-nosotros/director)
 │   ├── inicio/                      ← ProximaCelebracionInicio, Descubre y FormaParte (secciones de la home)
 │   ├── FormularioInscripcion.tsx    ← formulario coralista/instrumentista (inicio y contacto)
 │   ├── contacto/                    ← SelectorFormulario (unirme/contar) y FormularioContratacion
@@ -108,7 +109,7 @@ app/
         │   ├── DashboardHeader.tsx  ← cabecera del área privada con saludo
         │   ├── FileCard.tsx         ← tarjeta de partitura
         │   ├── AudioPlayer.tsx      ← exporta AudioCard (tarjeta de audio con reproductor)
-        │   ├── AdminSection.tsx     ← bloque "Administración" con 6 tarjetas (solo Director)
+        │   ├── AdminSection.tsx     ← bloque "Administración": tarjetas filtradas por roles de gestión
         │   ├── Modal.tsx            ← modal base + BotonPrincipal/BotonSecundario
         │   └── ConfirmDialog.tsx    ← confirmación genérica (usuarios y repertorios)
         └── admin/
@@ -412,7 +413,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Inicio (`/`)
 
-- **Orden:** Hero → Próxima celebración (el `CartelProximaCelebracion` completo, con catedral y pentagrama con notas) → Quiénes somos (breve, titular "Una voz de la Iglesia de Jaén" para no repetir el lema del hero, botón "Conoce más") → Palabras del director (cita, primer párrafo, firma y "Leer la carta completa") → **Forma parte** (cierre granate con pentagrama y dos botones a `/contacto?motivo=unirme|contar`) → **Descubre** (4 tarjetas con foto: Componentes, Repertorio, Galería, Calendario), al final por decisión de Fernando.
+- **Orden:** Hero → Próxima celebración (el `CartelProximaCelebracion` completo, con catedral y pentagrama con notas) → Quiénes somos (breve, titular "Una voz de la Iglesia de Jaén" para no repetir el lema del hero, botón "Conoce más") → **Palabras de nuestro Obispo, Mons. Sebastián Chico Martínez** (`palabrasObispo.tsx`: misma composición que tenía la del director; textos de prueba lorem ipsum y marcador "S" en lugar de foto) → **Forma parte** (cierre granate con pentagrama y dos botones a `/contacto?motivo=unirme|contar`) → **Descubre** (4 tarjetas con foto: Componentes, Repertorio, Galería, Calendario), al final por decisión de Fernando.
 - **El formulario de inscripción ya no está en la home**: vive en Contacto. `?motivo=` preselecciona la opción (la página de Contacto es dinámica por eso).
 - El hero se pausa al pasar el ratón o enfocarlo y no rota con "reducir movimiento".
 
@@ -447,10 +448,21 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - **Desplegable "Agrupar por"** (`SelectorAgrupacion`, accesible con teclado): Tipo de obra (familias: Ordinario de la misa, Propio de la misa, Motetes y antífonas, Himnos y cantos, Navidad), Autor (los "Anónimo…" juntos al final), Época (cronológica), Formación, Idioma y Título A–Z. Más buscador e índice para saltar a cada grupo.
 - `/repertorio` redirige (308) aquí. Lo gestiona el director en `/miembros/dashboard/admin/catalogo` (crear, editar, quitar). Datos en `lib/catalogo.ts` (tipos y `agrupar`) y `obrasPrueba`.
 
+### Gestión de contenido y roles de gestión (decidido)
+
+- **Gestor de contenido a medida dentro del panel, sobre Supabase** (se descartaron Payload, Sanity/Contentful y Decap/Tina: segundo panel, otros usuarios, fotos en git o límites del plan gratuito).
+- **Edición con formularios en el panel** (no edición sobre la página) y **sin revisión**: lo que se guarda se publica al momento (regenerando solo la página afectada).
+- **Roles de gestión** (`lib/gestion.ts`), independientes del rol musical y **acumulables** (una persona puede tener varios):
+  - Portada e inicio · Sobre nosotros · Galería · Agenda · Música · Secretaría.
+  - **El Director tiene siempre todos** y es **el único que da o quita roles** (`puedeAsignarRoles`). Secretaría gestiona cuentas, pero no reparte roles.
+  - En el dashboard, cada persona solo ve las tarjetas de sus roles (`AdminSection` recibe `roles`). En Supabase: tabla `permisos (usuario_id, rol)` y RLS que lo compruebe en cada escritura.
+- **Contenido editable:** textos sueltos en una tabla clave → valor (el texto actual del código queda como valor por defecto) y colecciones en sus tablas. **Historial de cambios** con "Deshacer" previsto.
+- **Fotos:** comprimir en el navegador al subir (WebP ~2000 px ~250 KB + miniatura ~40 KB) y servirlas desde Supabase Storage sin el optimizador de Vercel (el plan Hobby tiene cupo mensual y se bloquea 30 días si se supera). 1 GB gratis ≈ 4.000 fotos.
+
 ### UX del director
 
 - **Detección de rol:** si `rol === 'Director'`, se muestra la sección de Administración arriba del dashboard.
-- **6 sub-páginas de admin:** Usuarios, Componentes, Catálogo, Archivos, Repertorios, Calendario (cada una en su ruta).
+- **10 tarjetas de admin**, cada una de un rol de gestión: Portada e inicio, Textos y responsables, Componentes, Galería, Calendario, Catálogo, Repertorios, Archivos, Usuarios y Contacto. Pendientes (Próximamente): Portada, Textos y responsables, Galería, Archivos y Contacto.
 - **Modales para acciones:** crear/editar usuario, confirmar eliminación, mostrar contraseña generada.
 - **Filtros por sección (grupos de rol)** en la gestión de usuarios: Todos, Voces, Cuerda, Viento, Otros, Dirección.
 
@@ -582,7 +594,7 @@ Abre `http://localhost:3000`.
 - `/miembros` — login
 - `/miembros/recuperar` — recuperar contraseña
 - `/miembros` — login de prueba con `admin` / `admin`
-- `/miembros/dashboard` — dashboard (por defecto `usuarioPrueba.rol = 'Director'` en `app/miembros/dashboard/page.tsx`; cámbialo a 'Tenor', 'Soprano', etc. para ver la vista sin panel admin)
+- `/miembros/dashboard` — dashboard (por defecto `usuarioPrueba.rol = 'Director'` en `app/miembros/dashboard/page.tsx`; con otro rol y `gestion: ['galeria', 'agenda']` se ve como un gestor con esos roles; con `gestion: []`, como un miembro sin administración)
 - `/miembros/dashboard/admin/usuarios` — gestión de usuarios
 
 ### Cómo cambiar el rol de prueba

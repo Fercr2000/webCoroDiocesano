@@ -9,14 +9,17 @@ import AudioCard from './components/AudioPlayer';
 import AdminSection from './components/AdminSection';
 import BandaProximaCelebracion from '@/app/components/calendario/BandaProximaCelebracion';
 import { REPERTORIO_TODOS } from '@/lib/archivo';
+import { rolesEfectivos, type RolGestion } from '@/lib/gestion';
 import { repertoriosPrueba, partiturasPrueba, audiosPrueba, eventosPrueba } from '@/lib/datosPrueba';
 
 // ============= DATOS DE PRUEBA =============
 
-const usuarioPrueba = {
+const usuarioPrueba: { nombre: string; rol: string; gestion: RolGestion[] } = {
   nombre: 'Fernando',
-  rol: 'Director', // Cambia a 'Tenor', 'Soprano'... para ver la vista sin panel de administración
+  rol: 'Director', // Cambia a 'Tenor', 'Soprano'... para ver la vista de un miembro
+  gestion: [],     // Con otro rol, prueba p. ej. ['galeria', 'agenda'] para ver solo esas tarjetas
 };
+const rolesGestion = rolesEfectivos(usuarioPrueba);
 
 // Chips de filtro: "Todos" siempre primero y después los repertorios en el
 // orden que el director fija en Administración → Repertorios.
@@ -109,8 +112,8 @@ function Dashboard() {
           {/* Banda granate con la próxima celebración (lleva al calendario) */}
           <BandaProximaCelebracion eventos={eventosPrueba} href="/miembros/dashboard/calendario" textoEnlace="Ver calendario" />
 
-          {/* Solo el Director ve el panel de administración */}
-          {usuarioPrueba.rol === 'Director' && <AdminSection />}
+          {/* Administración: solo si tiene algún rol de gestión (el Director, todos) */}
+          {rolesGestion.length > 0 && <AdminSection roles={rolesGestion} esDirector={usuarioPrueba.rol === 'Director'} />}
 
           {/* CABECERA DE SECCIÓN */}
           <div className="flex items-center justify-center gap-4 mb-10">
