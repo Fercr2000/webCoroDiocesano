@@ -89,7 +89,7 @@ export default function Header() {
           </Link>
 
           {/* ============= NAV ESCRITORIO ============= */}
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden xl:flex items-center gap-6 2xl:gap-10">
 
             {enlaces.map((e) => (
               <NavLink key={e.href} href={e.href} label={e.label} activo={activo(e.href)} />
@@ -100,7 +100,7 @@ export default function Header() {
             <div className="relative group">
               <Link
                 href="/sobre-nosotros"
-                className={`flex items-center gap-1 text-sm tracking-[0.2em] uppercase font-medium transition-colors rounded-sm ${sobreActivo ? 'text-red-800' : 'text-stone-800 hover:text-red-900'}`}
+                className={`flex items-center gap-1 text-[13px] tracking-[0.14em] 2xl:text-sm 2xl:tracking-[0.2em] whitespace-nowrap uppercase font-medium transition-colors rounded-sm ${sobreActivo ? 'text-red-800' : 'text-stone-800 hover:text-red-900'}`}
                 aria-haspopup="true"
               >
                 <span className="relative">
@@ -128,12 +128,13 @@ export default function Header() {
               </div>
             </div>
 
+            <NavLink href="/sala-de-ensayo" label="Sala de ensayo" activo={activo('/sala-de-ensayo')} />
             <NavLink href="/contacto" label="Contacto" activo={activo('/contacto')} />
 
             {/* Botón destacado "Área de miembros" */}
             <Link
               href="/miembros"
-              className="rounded-lg relative overflow-hidden group text-sm tracking-[0.2em] uppercase font-medium text-stone-50 px-6 py-3 bg-gradient-to-br from-red-800 to-red-950 hover:from-red-700 hover:to-red-900 shadow-md hover:shadow-xl hover:shadow-red-900/40 transition-all duration-300"
+              className="rounded-lg relative overflow-hidden group text-[13px] tracking-[0.14em] 2xl:text-sm 2xl:tracking-[0.2em] whitespace-nowrap uppercase font-medium text-stone-50 px-5 2xl:px-6 py-3 bg-gradient-to-br from-red-800 to-red-950 hover:from-red-700 hover:to-red-900 shadow-md hover:shadow-xl hover:shadow-red-900/40 transition-all duration-300"
             >
               <span className="relative z-10">Área de miembros</span>
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -143,7 +144,7 @@ export default function Header() {
           {/* ============= HAMBURGUESA (móvil) ============= */}
           <button
             onClick={() => setMenuAbierto(true)}
-            className="md:hidden flex items-center justify-center w-11 h-11 text-stone-800 hover:text-red-800 transition-colors rounded-sm"
+            className="xl:hidden flex items-center justify-center w-11 h-11 text-stone-800 hover:text-red-800 transition-colors rounded-sm"
             aria-label="Abrir menú"
             aria-expanded={menuAbierto}
           >
@@ -156,7 +157,7 @@ export default function Header() {
       </div>
 
       {/* ============= PANEL MÓVIL ============= */}
-      <div className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-300 ${menuAbierto ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      <div className={`xl:hidden fixed inset-0 z-[60] transition-opacity duration-300 ${menuAbierto ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
 
         {/* Fondo oscurecido (cierra al pulsar) */}
         <div className="absolute inset-0 bg-stone-950/50 backdrop-blur-sm" onClick={() => setMenuAbierto(false)} />
@@ -193,6 +194,7 @@ export default function Header() {
             ))}
 
             <div className="mt-5">
+              <MobileLink href="/sala-de-ensayo" label="Sala de ensayo" activo={activo('/sala-de-ensayo')} />
               <MobileLink href="/contacto" label="Contacto" activo={activo('/contacto')} />
             </div>
 
@@ -218,7 +220,7 @@ function NavLink({ href, label, activo }: { href: string; label: string; activo:
     <Link
       href={href}
       aria-current={activo ? 'page' : undefined}
-      className={`relative group text-sm tracking-[0.2em] uppercase font-medium transition-colors rounded-sm ${activo ? 'text-red-800' : 'text-stone-800 hover:text-red-900'}`}
+      className={`relative group text-[13px] tracking-[0.14em] 2xl:text-sm 2xl:tracking-[0.2em] whitespace-nowrap uppercase font-medium transition-colors rounded-sm ${activo ? 'text-red-800' : 'text-stone-800 hover:text-red-900'}`}
     >
       <span className="relative">
         {label}

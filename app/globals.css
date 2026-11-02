@@ -173,13 +173,30 @@ button:focus-visible {
   animation: chevronCue 1.9s ease-in-out infinite;
 }
 
+/* Sala de ensayo: iconos que cobran vida al pasar el ratón por su tarjeta. */
+@keyframes pendulo {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(16deg); }
+}
+
+@keyframes agujaBusca {
+  0%, 100% { transform: rotate(-22deg); }
+  35% { transform: rotate(14deg); }
+  65% { transform: rotate(-4deg); }
+}
+
+.group:hover .sala-pendulo { animation: pendulo 1.2s ease-in-out infinite; }
+.group:hover .sala-aguja { animation: agujaBusca 1.8s ease-in-out infinite; }
+
 /* Respeto a quien prefiere menos movimiento. */
 @media (prefers-reduced-motion: reduce) {
   .kenburns,
   .chevron-cue,
   .pentagrama-ola,
   .nota-flota,
-  .respira {
+  .respira,
+  .sala-pendulo,
+  .sala-aguja {
     animation: none !important;
     transform: none !important;
   }

@@ -19,6 +19,7 @@ const SECCIONES: SeccionLegal[] = [
     titulo: "Qué cookies usamos",
     parrafos: [
       "Solo usamos cookies técnicas, imprescindibles para que la web funcione: las que mantienen abierta tu sesión en el área de miembros (de Supabase, nuestro proveedor de acceso) mientras navegas.",
+      "En la Sala de ensayo, tu navegador recuerda la La de referencia que elijas (por ejemplo, 442 Hz). Se guarda solo en tu dispositivo y nunca nos llega.",
       "No usamos cookies de análisis, de publicidad ni de redes sociales, y no seguimos tu navegación con fines comerciales.",
     ],
   },

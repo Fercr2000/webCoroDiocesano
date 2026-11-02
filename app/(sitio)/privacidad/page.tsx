@@ -23,6 +23,7 @@ const SECCIONES: SeccionLegal[] = [
       "Formulario «Contar con vosotros»: nombre, email, teléfono, entidad, fecha y lugar de la celebración y tu mensaje. Los usamos para responder a tu solicitud.",
       "Área de miembros: nombre, email, cuerda o instrumento y, si los tienes, tus roles de gestión de la web. Los usamos para darte acceso a tu material de estudio y a la agenda interna.",
       "Componentes y galería: el nombre de los componentes y las fotografías de celebraciones, conciertos y convivencias, para dar a conocer el coro.",
+      "Sala de ensayo: el afinador y «Afina tu voz» usan el micrófono solo mientras tú lo activas. El sonido se analiza en tu propio dispositivo: no se graba, no se guarda y no se envía a nadie.",
     ],
   },
   {

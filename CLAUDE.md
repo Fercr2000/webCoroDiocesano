@@ -53,6 +53,12 @@ lib/
 ├── catalogo.ts                      ← obras del catálogo público: tipos, épocas, formaciones, idiomas y agrupar()
 ├── gestion.ts                       ← roles de gestión, rolesEfectivos(), puedeGestionar(), puedeAsignarRoles()
 ├── galeria.ts                       ← álbumes y fotos de la galería: categorías, proporciones
+├── sala/                            ← lógica pura de la Sala de ensayo (probada en Node):
+│   ├── notas.ts                     ←   frecuencias con La de referencia (442 por defecto), nombres Do♯/Re♭, octava científica (Do4 = central)
+│   ├── detectorTono.ts              ←   YIN con FFT + afinado por varios periodos: < 0,1 cent con señal limpia, ~6 ms por análisis
+│   ├── tesituras.ts                 ←   cuerdas (extensión / tesitura / centro) y niveles de "Afina tu voz"; generarRonda()
+│   ├── tempo.ts                     ←   términos italianos, compases (incl. 6/4 y compuestos) y subdivisiones
+│   └── acordes.ts                   ←   nombre del intervalo o acorde que suena en el piano
 └── contacto.ts                      ← teléfonos (de muestra), email, Instagram y sede
 
 app/
@@ -81,6 +87,9 @@ app/
 │   ├── catalogo/                    ← Catalogo.tsx (índice agrupado) y SelectorAgrupacion.tsx (desplegable)
 │   ├── sobreNosotros/               ← PilaresGiratorios, Temas y Cifras (interactivos de /sobre-nosotros)
 │   ├── galeria/                     ← Galeria, CarpetaAlbum, VisorAlbum, VisorFoto y FotoRecortada
+│   ├── sala/                        ← Sala de ensayo: Piano, Metronomo, Afinador, AfinaTuVoz, BarraSala (La + metrónomo
+│   │                                  fijos abajo), Esfera (aguja), Pentagrama, SelectorLa, IconosSala; audio/ (motor con un
+│   │                                  único AudioContext, piano sintetizado, metrónomo con lookahead en Worker, tonos)
 │   ├── responsables/
 │   │   ├── FotoResponsable.tsx      ← foto cuadrada con marco (o inicial si no hay foto), tono granate o claro
 │   │   └── CartaResponsable.tsx     ← carta completa de un responsable (composición de "Palabras del director")
@@ -98,6 +107,7 @@ app/
 │   ├── page.tsx                     ← home (ver §6 "Inicio")
 │   ├── calendario/page.tsx          ← calendario público: SOLO celebraciones, sin datos internos
 │   ├── contacto/page.tsx            ← formularios (unirse / contar con el coro) + teléfonos y datos
+│   ├── sala-de-ensayo/              ← índice + piano, metronomo, afinador, afina-tu-voz (layout con la barra inferior)
 │   ├── repertorio/                  ← redirige a /sobre-nosotros/repertorio
 │   └── sobre-nosotros/
 │       ├── componentes/page.tsx     ← plano del escenario con los componentes (nombre completo)
@@ -455,6 +465,18 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - **Desplegable "Agrupar por"** (`SelectorAgrupacion`, accesible con teclado): Tipo de obra (familias: Ordinario de la misa, Propio de la misa, Motetes y antífonas, Himnos y cantos, Navidad), Autor (los "Anónimo…" juntos al final), Época (cronológica), Formación, Idioma y Título A–Z. Más buscador e índice para saltar a cada grupo.
 - `/repertorio` redirige (308) aquí. Lo gestiona el director en `/miembros/dashboard/admin/catalogo` (crear, editar, quitar). Datos en `lib/catalogo.ts` (tipos y `agrupar`) y `obrasPrueba`.
 
+### Sala de ensayo (`/sala-de-ensayo`, pública, en el menú)
+
+- **Cuatro herramientas:** Afina tu voz (destacada, en granate), Piano, Metrónomo y Afinador. Se descartaron "Dar la nota", el diapasón/bordón y "¿Qué voz soy?". Los **calentamientos vocales** quedan para más adelante y NO se anuncian aún en la página.
+- **La de referencia común, 442 Hz por defecto** (440, 415, 430… y ajuste de 0,1 Hz), en la barra fija inferior; se recuerda en el navegador (localStorage, con try/catch).
+- **Barra inferior** (sticky dentro del layout de la sala): La + metrónomo pequeño que sigue sonando al cambiar de herramienta.
+- **Piano:** sonido generado por código (no muestras). **Solo ratón y táctil** (varios dedos, glissando, fuerza según dónde se pulse); se descartó tocarlo con el teclado del ordenador, el pedal y el interruptor de resonancia. Nombres de las notas siempre visibles. 3/2/1 octavas según pantalla. Muestra nota, Hz e intervalo/acorde.
+- **Metrónomo:** péndulo de Maelzel sobre panel granate, sincronizado con el reloj de audio; compases 1, 2/4, 3/4, 4/4, 5/4, 6/4, 6/8, 9/8, 12/8; subdivisiones; acentos por pulso; marcar con toques; sonidos Clásico (tic + campanilla en el 1), Claves y Electrónico por síntesis modal.
+- **Afinador:** cromático, cuerdas al aire (violín, viola, violonchelo, contrabajo) y transposición Si♭/Fa/Mi♭; afinado = ±5 cents.
+- **Afina tu voz:** cuerda (S/C/T/B) y nivel. Suena la nota modelo, se calla y el micrófono escucha. Aguja ±100, pentagrama con la nota (clave de sol, sol octavada para tenor, fa para bajo) y un punto "tu voz", gráfica del camino de la voz y resumen con tendencia. Niveles: Fácil (centro de la voz, ±30 c, sostener 0,8 s), Medio (tesitura, ±20 c, 1 s), Alto (extensión, cromático, ±10 c, 1,2 s). Se juzga con la media de los últimos 450 ms (el vibrato no penaliza) y una desviación breve resta tiempo en vez de reiniciarlo.
+- **Micrófono:** sin cancelación de eco, supresión de ruido ni control de ganancia (deforman la medida); el audio se analiza en el dispositivo y no se envía (dicho en `/privacidad`).
+- **Probado** en Chromium con un banco de pruebas (salida de audio interceptada y micrófono simulado con vibrato y ruido): piano y referencia a ±0,2 cents, metrónomo exacto al microsegundo, afinador y entrenador con las desviaciones esperadas.
+
 ### Gestión de contenido y roles de gestión (decidido)
 
 - **Gestor de contenido a medida dentro del panel, sobre Supabase** (se descartaron Payload, Sanity/Contentful y Decap/Tina: segundo panel, otros usuarios, fotos en git o límites del plan gratuito).
@@ -492,7 +514,7 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 
 ### Sitio público (`/`)
 
-- [x] Header con menú desplegable "Sobre nosotros" (Quiénes somos, Director, Componentes, Responsables, Repertorio) y botón "Área de miembros" que lleva al login.
+- [x] Header con menú desplegable "Sobre nosotros" (Quiénes somos, Director, Componentes, Responsables, Repertorio, Galería), "Sala de ensayo" y botón "Área de miembros". Con tantas entradas, el menú completo se muestra desde `xl` (1280 px, algo más compacto hasta `2xl`); por debajo, el panel desplegable.
 - [x] Hero con slider de 2 slides, botones contextuales por slide, indicadores, cambio automático cada 6s.
 - [x] Sección "Quiénes somos" con titular en dos partes ("Servir cantando / Cantar sirviendo") y cita destacada.
 - [x] "Palabras del director" con foto vertical, capitular granate, tres párrafos, cita de San Agustín, firma.
@@ -578,6 +600,8 @@ Estas son las decisiones cerradas que no hay que rediscutir:
 - [ ] Gestión de la galería desde el panel del director (crear álbumes y subir fotos).
 - [ ] **Conectar calendario** a Supabase (tabla `eventos`, ver §5). Hoy el admin, el calendario de miembros y el público tienen cada uno su copia en memoria.
 - [x] `/contacto` — formularios de unirse y de contratación + teléfonos (de muestra).
+- [x] `/sala-de-ensayo` — piano, metrónomo, afinador y "Afina tu voz" (ver §6).
+- [ ] Sala de ensayo: calentamientos vocales (escalas y arpegios por cuerda).
 - [ ] Apertura pública: quitar la protección con contraseña (borrar `ACCESO_USUARIO`/`ACCESO_CLAVE` en Vercel) y, si procede, dominio propio.
 - [ ] Modo oscuro (evaluar si aporta).
 - [ ] Paginación si el volumen de archivos crece mucho (>200 por rol).
